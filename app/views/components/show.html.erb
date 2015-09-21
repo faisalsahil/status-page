@@ -1,0 +1,49 @@
+<script type="text/javascript">
+  var d = document.getElementById("compo");
+d.className = d.className + " active";
+</script>
+<div class="page-header">
+  <%= link_to "+ Incident",new_incident_path, class: "btn btn-success pull-right"%>
+  <h2><%= @component.name %></h2>
+</div>
+
+
+<dl class="dl-horizontal">
+  <dt><strong>Name</strong></dt>
+  <dd><%= @component.name %></dd>
+  <dt><strong>Status</strong></dt>
+  <dd><%= Status.find(@component.status_id).name if @component.status_id.present? %></dd>
+  <dt><strong>Description</strong></dt>
+  <dd><%= @component.description %></dd>
+</dl>
+
+<% if @incidents.present? %>
+	<div class="panel panel-default">
+	  <div class="panel-heading"><strong>Incidents<strong></div>
+	  <div class="panel-body">
+	   	<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Status</th>
+						<th>Description</th>
+						<th>Created At</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @incidents.each do |incident| %>
+					<tr>
+						<td><%= link_to "#{incident.try(:name)}", incident_path(incident) %></td>
+						<% st = State.find_by_id(incident.try(:status).to_i) %>
+						<td><%= st.try(:name) %></td>
+						<td><%= incident.try(:message) %></td>
+						<td><%= ActiveSupport::TimeZone[current_user.time_zone].parse(incident.created_at.to_s) %></td>
+						<td><%= link_to 'Update',edit_incident_path(incident), :class => 'btn btn-mini btn-info' %></td>
+					</tr>
+					<% end %>
+				</tbody>
+		</table>
+	  </div>
+	</div>
+<% end %>

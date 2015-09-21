@@ -1,0 +1,332 @@
+// (function() {
+//   var jQuery;
+
+//   if (window.jQuery === undefined || window.jQuery.fn.jquery !== '1.4.2') {
+//       var script_tag = document.createElement('script');
+//       script_tag.setAttribute("type","text/javascript");
+//       script_tag.setAttribute("src",
+//           "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js");
+//       if (script_tag.readyState) {
+//         script_tag.onreadystatechange = function () {
+//             if (this.readyState == 'complete' || this.readyState == 'loaded') {
+//                 scriptLoadHandler();
+//             }
+//         };
+//       } else {
+//         script_tag.onload = scriptLoadHandler;
+//       }
+      
+//       (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
+//   } else {
+//       jQuery = window.jQuery;
+//       main();
+//   }
+
+//   function scriptLoadHandler() {    
+//     jQuery = window.jQuery.noConflict(true);
+//     main(); 
+//   }
+
+//   function main() { 
+//     var url = "http://localhost:3000/resources/"+embedKey+"/embed.json";
+//     jQuery(document).ready(function($) { 
+//       setInterval(function(){
+//         $.ajax({
+//           type: "get",
+//           url: url,
+//           dataType: "json",
+//           success: function(result){
+//             $("#tableBody").html("");
+//             $("#userName").text("User Name: "+JSON.parse(result['user'])['username']);
+            
+//             if (!JSON.parse(result['metric']) || JSON.parse(result['metric']).length < 1){
+//               var tr = $("<tr />");
+//               var td = $("<td />").text('There are no metrices available for given user!').attr('colSpan','2');
+//               tr.append(td);
+//               $("#tableBody").append(tr);
+//             }
+//             else{
+//               $.each(JSON.parse(result['metric']), function(){
+//                 var metric = this;
+
+//                 var tr = $("<tr />");
+//                 var td = $("<td />").text(metric['userdef_name']);
+//                 var td1 = $("<td />").text(metric['status']);
+//                 tr.append(td,td1);
+//                 $("#tableBody").append(tr);
+//               });
+//             }
+//           }
+//         });
+//       }, 60000);
+
+//       $.getJSON(url,
+//       function(data) {   
+//         var id = "#"+containerId;
+//         $(id).css({"overflow": "auto","width":"220px","height":"300px","border-style": "solid","border-width": "1px","padding":"15px"});
+       
+//         var head = $("<h1></h1>").text("Metrices Data");
+//         $(id).append(head); 
+
+//         var uName = $("<h4></h4>").text("User Name: "+JSON.parse(data['user'])['username']).attr('id','userName');
+//         $(id).append(uName);
+
+//         var br = $("<br />");
+//         $(id).append(br);
+
+//         var tbl=$("<table />").attr('border','0').attr('width','100%');
+        
+//         var thd = $("<thead />");
+//         var theadTR = $("<tr />");
+//         var theadTD1 = $("<td />").text('Metric Name');
+//         var theadTD2 = $("<td />").text('Status');
+//         theadTR.append(theadTD1,theadTD2);
+//         thd.append(theadTR);
+        
+//         var tbdy = $("<tbody />").attr('id','tableBody');
+
+//         if (!JSON.parse(data['metric']) || JSON.parse(data['metric']).length < 1){
+//           var tr = $("<tr />");
+//           var td = $("<td />").text('There are no metrices available for given user!').attr('colSpan','2');
+//           tr.append(td);
+//           tbdy.append(tr);
+//         }
+//         else{
+//           $.each(JSON.parse(data['metric']), function(){
+//             var metric = this;
+
+//             var tr = $("<tr />");
+//             var td = $("<td />").text(metric['userdef_name']);
+//             var td1 = $("<td />").text(metric['status']);
+//             tr.append(td,td1);
+//             tbdy.append(tr);
+//           });
+//         }
+//         tbl.append(thd, tbdy);
+//         $(id).append(tbl);
+//       });
+//     });
+//   }
+// })();
+
+
+
+
+
+
+
+
+//============================= 2nd modification in this file===========================================
+//============Now data of components and incidents is displayed insted of metrics=======================
+
+
+
+// (function() {
+//   var jQuery;
+
+//   if (window.jQuery === undefined || window.jQuery.fn.jquery !== '1.4.2') {
+//       var script_tag = document.createElement('script');
+//       script_tag.setAttribute("type","text/javascript");
+//       script_tag.setAttribute("src",
+//           "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js");
+//       if (script_tag.readyState) {
+//         script_tag.onreadystatechange = function () {
+//             if (this.readyState == 'complete' || this.readyState == 'loaded') {
+//                 scriptLoadHandler();
+//             }
+//         };
+//       } else {
+//         script_tag.onload = scriptLoadHandler;
+//       }
+      
+//       (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
+//   } else {
+//       jQuery = window.jQuery;
+//       main();
+//   }
+
+//   function scriptLoadHandler() {    
+//     jQuery = window.jQuery.noConflict(true);
+//     main(); 
+//   }
+
+//   function main() { 
+//     var url = "http://66.11.12.92:3000/resources/"+embedKey+"/embed.json";
+//     jQuery(document).ready(function($) { 
+//       setInterval(function(){
+//         $.ajax({
+//           type: "get",
+//           url: url,
+//           dataType: "json",
+//           success: function(result){
+//             $("#tableBody").html("");
+//             $("#tableBody1").html("");
+//             $("#userName").text("User Name: "+JSON.parse(result['user'])['username']);
+            
+//             if (!JSON.parse(result['component']) || JSON.parse(result['component']).length < 1){
+//               var td = $("<div />").text('There are no components available for given user!').attr('id','noComponent');
+//               $('#noComponent').text(td);
+//               $('#table1').innerHtml("");
+//             }
+//             else{
+//               $.each(JSON.parse(result['component']), function(){
+//                 var metric = this;
+
+//                 var status = JSON.parse(result['status']);
+//                 var stat = null;
+//                 for (var i = 0; i < status.length; i++) {
+//                     if(status[i].id == metric['status_id']){
+//                       stat = status[i].name;
+//                     }
+//                 }
+
+//                 var tr = $("<tr />");
+//                 var td = $("<td />").text(metric['name']);
+//                 var td1 = $("<td />").text(stat);
+//                 tr.append(td,td1);
+//                 $("#tableBody").append(tr);
+//               });
+//             }
+
+//             if (!JSON.parse(result['incident']) || JSON.parse(result['incident']).length < 1){
+//               var td = $("<div />").text('There are no incidents available for given user!').attr('id','noIncident');
+//               $('#noIncident').text(td);
+//               $('#table2').innerHtml("");
+//             }
+//             else{
+//               $.each(JSON.parse(result['incident']), function(){
+//                 var metric = this;
+
+//                 var state = JSON.parse(result['state']);
+//                 var stat = null;
+//                 var comp = JSON.parse(result['component']);
+//                 var name = null;
+//                 for (var i = 0; i < state.length; i++) {
+//                     if(state[i].id == metric['status']){
+//                       stat = state[i].name;
+//                     }
+//                 }
+//                 for (var i = 0; i < comp.length; i++) {
+//                     if(comp[i].id == metric['component_id']){
+//                       name = comp[i].name;
+//                     }
+//                 }
+
+//                 var tr = $("<tr />");
+//                 var td = $("<td />").text(metric['name']);
+//                 var td1 = $("<td />").text(name);
+//                 var td2 = $("<td />").text(stat);
+//                 var td3 = $("<td />").text(metric['message']); 
+//                 tr.append(td,td1,td2,td3);
+//                 $("#tableBody1").append(tr);
+//               });
+//             }
+//           }
+//         });
+//       }, 60000);
+
+//       $.getJSON(url,
+//       function(data) {   
+//         var id = "#"+containerId;
+//         $(id).css({"overflow": "auto","width":"240px","height":"300px","border-style": "solid","border-width": "1px","padding":"15px"}); 
+
+//         var uName = $("<h2></h2>").text("User Name: "+JSON.parse(data['user'])['username']).attr('id','userName');
+//         $(id).append(uName);
+
+//         var head = $("<h3></h3>").text("Components");
+//         $(id).append(head);
+
+//         if (!JSON.parse(data['component']) || JSON.parse(data['component']).length < 1){
+//           var td = $("<div />").text('There are no components available for given user!').attr('id','noComponent');
+//           $(id).append(td);
+//         }
+//         else{
+//           var tbl=$("<table />").attr('border','0').attr('width','100%').attr('id','table1');
+          
+//           var thd = $("<thead />");
+//           var theadTR = $("<tr />");
+//           var theadTD1 = $("<td />").text('Component Name');
+//           var theadTD2 = $("<td />").text('Status');
+//           theadTR.append(theadTD1,theadTD2);
+//           thd.append(theadTR);
+          
+//           var tbdy = $("<tbody />").attr('id','tableBody');
+        
+//           $.each(JSON.parse(data['component']), function(){
+//             var metric = this;
+
+//             var status = JSON.parse(data['status']);
+//             var stat = null;
+//             for (var i = 0; i < status.length; i++) {
+//                 if(status[i].id == metric['status_id']){
+//                   stat = status[i].name;
+//                 }
+//             }
+
+//             var tr = $("<tr />");
+//             var td = $("<td />").text(metric['name']);
+//             var td1 = $("<td />").text(stat);
+//             tr.append(td,td1);
+//             tbdy.append(tr);
+//           });
+//           tbl.append(thd, tbdy);
+//           $(id).append(tbl);
+//         }
+
+//         var br = $("<br />");
+//         $(id).append(br,br);
+
+//         var head1 = $("<h3></h3>").text("Incidents");
+//         $(id).append(head1);
+
+//         if (!JSON.parse(data['incident']) || JSON.parse(data['incident']).length < 1){
+//           var td = $("<div />").text('There are no incidents available for given user!').attr('id','noIncident');
+//           $(id).append(td);
+//         }
+//         else{
+//           var tbl=$("<table />").attr('border','0').attr('width','100%').attr('id','table2');
+          
+//           var thd = $("<thead />");
+//           var theadTR = $("<tr />");
+//           var theadTD1 = $("<td />").text('Incident Name');
+//           var theadTD2 = $("<td />").text('Belongs to');
+//           var theadTD3 = $("<td />").text('Status');
+//           var theadTD4 = $("<td />").text('Message');
+//           theadTR.append(theadTD1,theadTD2,theadTD3,theadTD4);
+//           thd.append(theadTR);
+          
+//           var tbdy = $("<tbody />").attr('id','tableBody1');
+        
+//           $.each(JSON.parse(data['incident']), function(){
+//             var metric = this;
+
+//             var state = JSON.parse(data['state']);
+//             var stat = null;
+//             var comp = JSON.parse(data['component']);
+//             var name = null;
+//             for (var i = 0; i < state.length; i++) {
+//                 if(state[i].id == metric['status']){
+//                   stat = state[i].name;
+//                 }
+//             }
+//             for (var i = 0; i < comp.length; i++) {
+//                 if(comp[i].id == metric['component_id']){
+//                   name = comp[i].name;
+//                 }
+//             }
+
+//             var tr = $("<tr />");
+//             var td = $("<td />").text(metric['name']);
+//             var td1 = $("<td />").text(name);
+//             var td2 = $("<td />").text(stat);
+//             var td3 = $("<td />").text(metric['message']);
+//             tr.append(td,td1,td2,td3);
+//             tbdy.append(tr);
+//           });
+//           tbl.append(thd, tbdy);
+//           $(id).append(tbl);
+//         }
+//       });
+//     });
+//   }
+// })();

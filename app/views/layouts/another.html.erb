@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Status Page</title>
+		<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	 	<script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+	 	
+		<%= stylesheet_link_tag    "application", :media => "all" %>
+		<%= javascript_include_tag "application" %>
+
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	 	
+
+		<%= csrf_meta_tags %>
+	</head>
+	<body>
+		
+		<div id="wrapper">
+			<header class="navbar navbar-inverse" role="banner">
+				<div class="container">
+					<div class="navbar-header">
+						<a href="<%= home_index_path %>" class="navbar-brand navbar-brand-img">
+							<img src="<%=asset_path "logo.png"%>" alt="MVP Ready">
+						</a>
+					</div> <!-- /.navbar-header -->
+				</div> <!-- /.container -->
+			</header>
+
+			<div class="content">
+				<div class="container">
+					<%= render partial: "partials/flash_message" %>
+					<%= yield %>                   <!-- All body will go here -->
+				</div> <!-- /.container -->
+			</div> <!-- .content -->
+		</div> <!-- /#wrapper -->
+
+		<footer class="footer">
+			<div class="container">
+				<p class="pull-left">Copyright &copy; 2013 MVP Ready.</p>
+			</div>
+		</footer>
+
+	</body>
+</html>

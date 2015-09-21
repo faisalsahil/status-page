@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+  setInterval(function(){
+    location.reload();
+  }, 60000);
+
+  $(document).ready(function(){
+    $("#incidentHistory").hide();
+  $("#history").click(function(){
+    if($('#incidentHistory').is(':hidden')){
+      $("#incidentHistory").show(1000);
+    }
+    else{
+      $("#incidentHistory").hide(1000);
+    }
+  });
+  });
+</script>
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+
+<%#= favicon_link_tag 'favicon.ico' %>
+<% if @user.try(:customizepage).try(:favicon).present? %>
+<link rel="shortcut icon" href="<%= @customizepage.favicon_url %>" />
+<%end%>
+
+<title><%= @user.try(:username) %> - Status Page</title>
+  <%= stylesheet_link_tag "theme/theme2"%>
+  <%= stylesheet_link_tag "theme/theme1"%>
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"> -->
+<style>
+  <%= @customizepage.try(:customcss).try(:html_safe) %>
+</style>
+<style>
+  .alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+.alert h4 {
+  margin-top: 0;
+  color: inherit;
+}
+.alert .alert-link {
+  font-weight: bold;
+}
+.alert > p,
+.alert > ul {
+  margin-bottom: 0;
+}
+.alert > p + p {
+  margin-top: 5px;
+}
+.alert-dismissable,
+.alert-dismissible {
+  padding-right: 35px;
+}
+.alert-dismissable .close,
+.alert-dismissible .close {
+  position: relative;
+  top: -2px;
+  right: -21px;
+  color: inherit;
+}
+.alert-success {
+  color: #fff;
+  background-color: #3C9F15;
+  border-color: #d6e9c6;
+}
+.alert-success hr {
+  border-top-color: #c9e2b3;
+}
+.alert-success .alert-link {
+  color: #2b542c;
+}
+.alert-info {
+  color: #31708f;
+  background-color: #70C0E9;
+  border-color: #bce8f1;
+}
+.alert-info hr {
+  border-top-color: #a6e1ec;
+}
+.alert-info .alert-link {
+  color: #245269;
+}
+.alert-warning {
+  color: #8a6d3b;
+  background-color: #F9DE55;
+  border-color: #faebcc;
+}
+.alert-warning hr {
+  border-top-color: #f7e1b5;
+}
+.alert-warning .alert-link {
+  color: #66512c;
+}
+.alert-danger {
+  color: #ffffff;
+  background-color: #BF0E0E;
+  border-color: #ebccd1;
+}
+.alert-danger hr {
+  border-top-color: #e4b9c0;
+}
+.alert-danger .alert-link {
+  color: #843534;
+}
+</style>
+<style>
+  body{
+    background-color: <%= @customizepage.try(:background_color) %>;
+    color: <%= @customizepage.try(:font_color) %>;
+  }
+  a {
+   color: <%= @customizepage.try(:link_color) %>; 
+  }
+  *{
+    font-family: Arial, Helvetica, sans-serif !important;
+  }
+</style>
+</head>
+
+<body>
+<%= render partial: "partials/flash_message" %>
+<%= @customizepage.try(:customheader).try(:html_safe) %>
+<!-- Page Content -->
+<div class="container  main_content"> 
+  <div class="banner">
+
+    <%= image_tag("theme/banner.png", class: "img-responsive") if @customizepage.try(:coverimage).blank? && @customizepage.try(:coverimageshow) == true %>
+
+    <%= image_tag(@customizepage.coverimage_url, class: "img-responsive", style: "width:947px; max-height:415px") if @user.try(:customizepage).try(:coverimage).present? && @customizepage.try(:coverimageshow) == true %>
+
+  </div>
+  
+  <!-- Jumbotron Header -->
+  <header class="header hero-spacer"> 
+    <!-- <img src="images/banner.png" class="img-responsive"> --> 
+  </header>
+  <!-- Button trigger modal -->
+
+  <%= image_tag(@customizepage.logo_url) if @user.try(:customizepage).try(:logo).present? && @user.try(:customizepage).try(:coverimageshow) != true %> 
+
+  <div class="penal">
+    
+    <h2 style="color:black;"><strong><%= @user.try(:customizepage).try(:logoname) %></strong></h2>
+    <button class="btn btn-primary btn-lg btn-sub col-sm-4 col-md-3 col-md-offset-1"data-toggle="modal" data-target="#myModal"> Subscribe to updates </button>
+  </div>
+  <!-- <div role="alert" class="alert alert-info heading col-xs-12 col-sm-12 col-md-12"> <strong>All Systems Operational</strong> </div> -->
+  <br /><br />
+
+ 
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="myModalLabel">Subscribe to update</h4>
+        </div>
+        <div class="modal-body">
+          <ul id="myTab" class="nav nav-tabs">
+            <li class="active"> <a href="#home" data-toggle="tab"> <span class="glyphicon glyphicon-envelope"></span> </a> </li>
+            <li> <a href="#rss" data-toggle="tab"> RSS </a> </li>
+            <li> <a href="#sms" data-toggle="tab"> SMS </a> </li>
+            <!-- <li><a href="#ios" data-toggle="tab"><span class="glyphicon glyphicon-earphone"></span></a></li>
+            <li><a href="#ejb" data-toggle="tab"><span class="glyphicon glyphicon-signal"></span></a></li> -->
+          </ul>
+
+
+          <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade in active" id="home">
+              <p class="navbar-btn">Get email notifications</p>
+                <%= form_for @subscriber, :url => subscribe_customizepage_path(@user),method: :post do |f| %>
+                  <div class="form-group">
+                  <%= f.email_field :email, :placeholder => 'abc@temp.com', :class => 'form-control', :required => true %>
+                  <button type="submit" class="btn btn-primary col-xs-12 col-sm-12 col-md-12 navbar-btn" name="save-changes" >Save changes</button>
+                <% end %>
+              </form>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="rss">
+            <div class="hero-spacer"></div>
+            Get <a href="/customizepages/history.rss" target="_blank" >RSS Feed</a>
+            <div class="hero-spacer"></div>
+          </div>
+          <div class="tab-pane fade" id="sms">
+              <p class="navbar-btn">Get sms notifications</p>
+                <%= form_for @sms, :url => smsSubscribe_customizepage_path(@user),method: :post do |f| %>
+                  <div class="form-group">
+                  Add '+' sign then country code and then your mobile number
+                  <%= f.text_field :phone, :placeholder => '+19165426968', :class => 'form-control', :required => true %>
+                  <button type="submit" class="btn btn-primary col-xs-12 col-sm-12 col-md-12 navbar-btn" name="save-changes" >Save changes</button>
+                <% end %>
+              <!-- </form> -->
+            </div>
+            </div>
+          <div class="tab-pane fade" id="ios">
+            <p class="navbar-btn">Get email notifications whenever Admin creates or updates an incident</p>
+            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+            <button type="button" class="btn btn-primary col-xs-12 col-sm-12 col-md-12 navbar-btn">Save changes</button>
+          </div>
+          <div class="tab-pane fade" id="ejb">
+            <p class="navbar-btn">Get the <a href="javascript:void(0);">Atom Feed</a> or <a href="javascript:void(0);">RSS Feed</a>. </p>
+          </div>
+        </div>
+        </form>
+      </div>
+      <!--  <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> --> 
+    </div>
+  </div>
+</div>
+<!-- Page Features --> 
+<!-- /.row --> 
+<!-- Title -->
+<div class="row">
+  <div class="col-sm-12 col-lg-12">
+  <% if @user.try(:customizepage).try(:abouttext) != "" %>
+    <h3><strong><%= @user.try(:customizepage).try(:abouttexttitle) %></strong></h3>
+    <%end%>
+    <p><%= @user.try(:customizepage).try(:abouttext) %></p>
+  </div>
+</div>
+<!-- /.row -->
+
+<% if @validMaintenance.present?%>
+  <hr>
+  <h3>
+    Scheduled Mentainence
+  </h3>
+  <% @validMaintenance.each do |main|%>
+    <div class="panel panel-warning">
+      <div class="panel-heading" style="background-color:<%= @customizepage.try(:yellows)%>;"><%= main.try(:title)%></div>
+      <div class="panel-body">
+      <% compName = Component.find_by_id(main.try(:component_id)) %>
+      <strong>Belongs to Component:</strong><%= compName.try(:name)%><br/>
+      <strong>Maintenance Start Time:</strong><%= ActiveSupport::TimeZone[@user.time_zone].parse(main.start_at.to_s) %><br/>
+      <strong>Maintenance End Time:</strong><%= ActiveSupport::TimeZone[@user.time_zone].parse(main.end_at.to_s) %><br/>
+      <% if main.try(:description) != "" %>
+      <strong>Message:</strong><%= main.try(:description)%>
+      <%end%>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+<hr>
+<!-- ===================== unresolved incidents here ======================= -->
+<% @alloperationalcomponents = true %>
+<% @components_all = @user.try(:components) %>
+<% @firstStatus = Status.where("user_id=?",@user.try(:id) ).first %>
+
+<% if @firstStatus.present? && @components_all.present? %>
+  <% @components_all.each do |compo| %>
+    <% if Status.find(compo.try(:status_id)).try(:name) == @firstStatus.name %>
+      <!-- <strong>operational</strong> -->
+    <% else %>
+        <!-- <strong>not operational</strong> -->
+      <% @alloperationalcomponents = false %>
+      <% break %>
+    <%end%>
+  <%end%>
+<%end%> 
+
+<% if @unresolved_incidents.blank? && @alloperationalcomponents == true %>
+  <div class="well" style="background-color:<%= @customizepage.try(:greens)%>;">
+      <strong style="font-size:18px;color:white;">All Systems Operational</strong>
+  </div>
+<% else %>
+  <% if @unresolved_incidents.present? %>
+  <h3>
+    Active Incident
+  </h3>
+  <% end %>
+  <% @unresolved_incidents && @unresolved_incidents.each do |incident|%>
+    <div class="panel panel-primary">
+      <div class="panel-heading"><%= incident.try(:name)%></div>
+      <div class="panel-body">
+      <% compName = Component.find_by_id(incident.try(:component_id)) %>
+      <strong>Belongs to Component:</strong><%= compName.try(:name)%><br/>
+        <strong>Current State:</strong>
+        <% st = State.find_by_id(incident.try(:status).to_i) %>
+        <%= st.try(:name)%><br/>
+        <% if incident.try(:message) != "" %>
+        <strong>Message:</strong><%= incident.try(:message)%>
+        <%end%>
+        <strong class="pull-right"><%= ActiveSupport::TimeZone[@user.time_zone].parse(incident.created_at.to_s) %></strong>
+      </div>
+    </div>
+    <hr>
+  <% end %>
+<% end %>
+
+
+<% totaldatasources = @user.try(:datasources) %>
+
+<% if totaldatasources.present? %>
+  <div>
+    <h3>
+      System Metrics
+    </h3>
+  </div>
+  <% totaldatasources.try(:each) do |datasource|%>
+    <% datasource.try(:metrics).try(:each) do |metric| %>
+      <% if metric.displayit == true %>
+        <% if metric.status == "down" %>
+          <div class="panel panel-danger">
+        <% elsif metric.status == "up" %>
+          <div class="panel panel-success">
+        <% end %>
+          <div class="panel-heading">
+            <h3 class="panel-title"><%= metric.userdef_name%></h3>
+          </div>
+          <div class="panel-body"><%= metric.name %>
+          <br />
+          <strong>Status : </strong><span><%= metric.status %></span>
+            <!--   <div class="pull-right"> -->
+                <!-- <a href="#" class="btn btn-danger">Update</a> -->
+              <!-- </div> -->
+          </div>
+        </div>
+      <%end%>
+    <%end%>
+  <hr>
+  <%end%>
+<%end%>
+
+
+<ul class="list-group">
+  <div>
+    <h3>
+      <%= @user.try(:customizepage).try(:systemcomponentstitle) %>
+    </h3>
+  </div>
+  <% @components && @components.each do |component|%>
+    <li class="list-group-item"> 
+    <% if Status.find(component.try(:status_id)).try(:default_value) == "Fully Operational" %>
+      <span class="badge" style="background-color:<%= @customizepage.greens%>">
+    <% elsif Status.find(component.try(:status_id)).try(:default_value) == "Scheduled Maintenance" %>
+      <span class="badge" style="color:gray;background-color:<%= @customizepage.yellows%>">
+    <% else %>
+      <span class="badge" style="background-color:<%= @customizepage.reds%>">
+    <% end %>
+    <%= Status.find(component.try(:status_id)).try(:name) if component.try(:status_id).present?%> </span> 
+      <%= component.try(:name)%> </li>
+  <% end %>
+</ul>
+<a href="javascript:void(0);" id="history">History</a>
+<div id="incidentHistory">
+  <% if @incidents.present?%>
+    <div class="row">
+      <div class="col-lg-12 content_area">
+        <h3><strong>Past Incidents</strong></h3>
+      </div>
+    </div>
+    <%  @incidents.each do |incident| %>
+      <div class="details">
+      <span><strong>Component Name : </strong><%= @user.try(:components).find(incident.try(:component_id)).try(:name) %></span><br/>
+      <span><strong>Incident Name  : </strong><%= incident.try(:name)%></span><br/>
+       <strong><%= ActiveSupport::TimeZone[@user.time_zone].parse(incident.created_at.to_s) %></strong>
+        
+        <span class="pull-right"><strong>Current State: </strong><% st = State.find_by_id(incident.try(:status).to_i) %><%= st.name %></span>
+        <hr>
+      </div>
+    <% end %>
+    
+  <% else %>
+    <h3><strong>There are no Incidents to show.</strong></h3>
+    <hr>
+  <% end %>
+</div>
+   <hr>
+  <%= @customizepage.try(:customfooter).try(:html_safe) %>
+  <!-- <br/> -->
+  <!-- <span class="pull-right">Powered by StatusPage.com</span> -->
+  <%#= javascript_include_tag "theme/theme1" %>
+  <%= javascript_include_tag "theme/theme2" %>
+</body>
+</html>

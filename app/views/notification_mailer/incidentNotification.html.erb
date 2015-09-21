@@ -1,0 +1,15 @@
+
+<% str = @c_user.try(:emailbodyincidentformat) %>
+
+<% str = str.gsub("$$component_name$$",@component) %>
+<% str = str.gsub("$$component_status$$",@status) %>
+<% str = str.gsub("$$incident_name$$",@incident) %>
+<% str = str.gsub("$$incident_state$$",@state) %>
+
+
+<%= str %>
+
+
+
+
+

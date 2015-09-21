@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  theme: MyString
+  logo: MyString
+  favicon: MyString
+  coverimage: MyString
+  background_color: MyString
+  font_color: MyString
+  link_color: MyString
+  yellows: MyString
+  reds: MyString
+  greens: MyString
+
+two:
+  theme: MyString
+  logo: MyString
+  favicon: MyString
+  coverimage: MyString
+  background_color: MyString
+  font_color: MyString
+  link_color: MyString
+  yellows: MyString
+  reds: MyString
+  greens: MyString

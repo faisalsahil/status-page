@@ -1,0 +1,74 @@
+<script type="text/javascript">
+	var d = document.getElementById("user");
+	d.className = d.className + " active";
+</script>
+
+
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#home" data-toggle="tab">Active Users</a></li>
+  <li><a href="#3rdParty" data-toggle="tab">Suspended Users</a></li>
+</ul>
+
+<div class="tab-content">
+  <div class="tab-pane active" id="home">
+	<h1>Active Users</h1>
+
+	<table class="table table-striped">
+		<thead>
+		    <tr>
+		      	<th>Name</th>
+		        <th>Email</th>
+		      	<th>Last Signed In At</th>
+		      	<th>Created At</th>
+		      	<th><th><th colspan="3">Action</th>
+		    </tr>
+		</thead>
+		<tbody>
+		    <% @usersA.each do |userA| %>
+		      <tr>
+		        <td><%= link_to "#{userA.try(:username)}", user_path(userA) %></td>
+		        <td><%= userA.try(:email) %></td>
+		        <td><%= userA.last_sign_in_at %></td>
+		        <td><%= ActiveSupport::TimeZone[current_user.time_zone].parse(userA.created_at.to_s) %></td>
+		        <td><%= link_to 'Suspend', typeChange_user_path(userA), method: :typeChange, data: { confirm: 'Are you sure you want to suspend this user?' }, :class => 'btn btn-mini', :style => 'font-size:8.6px;margin-right:-25px;;background-color:gray;color:white' %></td>
+		        <td><%= link_to 'Incidents',incident_user_path(userA), :target => '_blank', :class => 'btn btn-mini btn-info', :style => 'font-size:8.6px;margin-right:-25px;' %></td>
+		        <td><%= link_to 'Edit',edit_user_path(userA), :class => 'btn btn-mini btn-success', :style => 'font-size:8.6px;margin-right:-25px;' %></td>
+		        <td><%= link_to 'Delete', user_path(userA), method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini btn-danger', :style => 'font-size:8.6px;margin-right:-25px;' %></td>
+		        <td><%= link_to 'SU',"/switch_user?scope_identifier=user_#{userA.id}", :class => 'btn btn-mini', :style => 'font-size:8.6px;margin-right:-25px;background-color:black;color:white' %></td>
+		        
+		      </tr>
+		    <% end %>
+		  </tbody>
+	</table>  	
+  </div>
+  <div class="tab-pane" id="3rdParty">
+  	<h1>Suspended Users</h1>
+
+	<table class="table table-striped">
+		<thead>
+		    <tr>
+		      	<th>Name</th>
+		        <th>Email</th>
+		      	<th>Last Signed In At</th>
+		      	<th>Created At</th>
+		      	<th><th><th colspan="3">Action</th>
+		    </tr>
+		</thead>
+		<tbody>
+		    <% @usersS.each do |userS| %>
+		      <tr>
+		        <td><%= link_to "#{userS.try(:username)}", user_path(userS) %></td>
+		        <td><%= userS.try(:email) %></td>
+		        <td><%= userS.last_sign_in_at %></td>
+		        <td><%= ActiveSupport::TimeZone[current_user.time_zone].parse(userS.created_at.to_s) %></td>
+		        <td><%= link_to 'Active', typeChange_user_path(userS), method: :typeChange, data: { confirm: 'Are you sure you want to active this user?' }, :class => 'btn btn-mini btn-success', :style => 'font-size:8.6px;margin-right:-25px;' %></td>
+		        <td><%= link_to 'Incidents',incident_user_path(userS), :target => '_blank', :class => 'btn btn-mini btn-info', :style => 'font-size:8.6px;margin-right:-25px;' %></td>
+		        <td><%= link_to 'Edit',edit_user_path(userS), :class => 'btn btn-mini btn-success', :style => 'font-size:8.6px;margin-right:-25px;' %></td>
+		        <td><%= link_to 'Delete', user_path(userS), method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini btn-danger', :style => 'font-size:8.6px;margin-right:-25px;' %></td>
+		        <td><%= link_to 'SU',"/switch_user?scope_identifier=user_#{userS.id}", :class => 'btn btn-mini', :style => 'font-size:8.6px;margin-right:-25px;background-color:black;color:white' %></td>
+		      </tr>
+		    <% end %>
+		  </tbody>
+	</table>
+  </div>
+</div>

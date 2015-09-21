@@ -1,0 +1,295 @@
+<script type="text/javascript">
+	var d = document.getElementById("metric");
+	d.className = d.className + " active";
+</script>
+
+
+
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#home" data-toggle="tab">Metric</a></li>
+  <li><a href="#3rdParty" data-toggle="tab">Third Party Data Source</a></li>
+</ul>
+
+<div class="tab-content">
+  <div class="tab-pane active" id="home">
+	<h1 style="margin-top:15px;">Metrics</h1>
+	
+
+   
+    <div class="panel panel-default" style="border:none">
+        <div class="panel-body">
+            <div class="pull-right">
+              <a href="#addModal" class="btn btn-lg btn-info" data-toggle="modal">Add a Metric</a>
+            </div>
+        </div>
+    </div>
+
+    
+    <% totaldatasources = current_user.datasources.all %>
+    <% totaldatasources.each do |totaldatasource|%>
+
+        <% current_user.datasources.find_by_source_name(totaldatasource.source_name).metrics.all.each do |metrict| %>
+        <% if metrict.displayit == true %>
+
+        <div class="panel panel-default">
+            <div class="panel-body"><%= metrict.userdef_name %>
+            <br />
+            <strong>Status : </strong><span><%= metrict.status %></span>
+                <div class="pull-right">
+                
+                <%= link_to 'Unload', unload_metric_metric_path(metrict), method: :post, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger' %>
+                
+                </div>
+            </div>
+        </div>
+        <%end%>
+
+        <%end%>
+    <%end%>
+  </div>
+  <div class="tab-pane" id="3rdParty">
+  	<div style="width:250px;height:140px;margin:30px 30px 30px 30px;border: 2px dashed gray; position: absolute;" align="center">
+  		</br><span style="font-size:25px;">Pingdom</span></br>
+  		<% if @datasource.new_record? %>
+        </br>
+        <a href="#myModal" data-toggle="modal" ><input type="button" value="Link Account" class="btn btn-lg btn-info" style="margin-right: 50px;" /></a>
+  	   <% else %>
+      
+        <a href="javascript:void(0)" data-toggle="modal" ><input type="button" value="Linked" class="btn btn-lg btn-success disabled" style="margin-right: 91px;  margin-top:15px;" disabled="true" /></a>
+        <br /><br />
+        <a href="#updatemodal" style="margin-right: 50px; font-size:12px;" data-toggle="modal" >Update</a>
+       <% end %>
+    </div>
+  	 <div style="width:250px;height:140px;margin:30px 30px 30px 310px;border: 2px dashed gray; position: absolute;" align="center">
+  		</br><span style="font-size:25px;">Site Up Time</span></br>
+      <% if @datasourcesut.new_record? %>
+        </br>
+        <a href="#myModalsut" data-toggle="modal" ><input type="button" value="Link Account" class="btn btn-lg btn-info" style="margin-right: 50px;" /></a>
+       <% else %>
+       
+        <a href="javascript:void(0)" data-toggle="modal" ><input type="button" value="Linked" class="btn btn-lg btn-success disabled" style="margin-right: 91px;  margin-top:15px;" disabled="true" /></a>
+        <br /><br />
+        <a href="#updatemodalsut" style="margin-right: 50px; font-size:12px;" data-toggle="modal" >Update</a>
+       <% end %>
+  	</div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h1 class="modal-title">Link Account with Pingdom</h1>
+        </div>
+        <%= form_for @datasource, :url=>pingdom_auth_metrics_path, method: :post  do |f| %>
+
+        <div class="modal-body">
+        	<label style="font-size:20px;font-weight:normal;">Email</label></br>
+
+        	<!-- <input id="pingdom-email" type="text" class="form-control" placeholder="Email"/> -->
+
+          <%= f.text_field :ds_email, :class => 'form-control', :placeholder => "Email" %>
+
+        	<label style="font-size:9px;color:gray;">The email you use to log in to Pingdom.</label></br></br>
+
+        	<label style="font-size:20px;font-weight:normal;">Password</label></br>
+        	<!-- <input id="pingdom-password" type="password" class="form-control" placeholder="Password"/> -->
+          <%= f.password_field :ds_pass, :class => 'form-control', :placeholder => "Password" %>
+        	<label style="font-size:9px;color:gray;">The password you use to log in to Pingdom.</label></br></br>
+
+        	<label style="font-size:20px;font-weight:normal;">Application Key</label></br>
+        	<!-- <input id="pingdom-appkey" type="text" class="form-control" placeholder="Application Key"/> -->
+          <%= f.text_field :ds_appkey, :class => 'form-control', :placeholder => "Application Key" %>
+        	<label style="font-size:9px;color:gray;">The key for the specific application you want in Pingdom.</label></br></br>
+
+        </div>
+        <div class="modal-footer">
+        	<button type="submit" class="btn btn-info" onclick="test()">Link Account</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+        </div>
+        <%end%>
+        
+      </div><!-- /.modal-content -->
+    </div>
+</div>
+
+<div class="modal fade" id="myModalsut" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h2 class="modal-title">Link Account with Siteuptime</h2>
+        </div>
+        <%= form_for @datasourcesut, :url=>siteuptime_auth_metrics_path, method: :post  do |f| %>
+
+        <div class="modal-body">
+          <label style="font-size:20px;font-weight:normal;">Email</label></br>
+
+          
+          <%= f.text_field :ds_email, :class => 'form-control', :placeholder => "Email" %>
+
+          <label style="font-size:9px;color:gray;">The email you use to log in to Siteuptime.</label></br></br>
+
+          <label style="font-size:20px;font-weight:normal;">Password</label></br>
+          
+          <%= f.password_field :ds_pass, :class => 'form-control', :placeholder => "Password" %>
+          <label style="font-size:9px;color:gray;">The password you use to log in to Siteuptime.</label></br></br>
+
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-info">Link Account</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+        </div>
+        <%end%>
+        
+      </div><!-- /.modal-content -->
+    </div>
+</div>
+
+<div class="modal fade" id="updatemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h1 class="modal-title">Update Pingdom Account</h1>
+        </div>
+        <%= form_for @datasource, :url=>pingdom_auth_update_metrics_path, method: :put  do |f| %>
+        <div class="modal-body">
+          <label style="font-size:20px;font-weight:normal;">Email</label></br>
+
+          
+          <%= f.text_field :ds_email, :class => 'form-control', :placeholder => "Email" %>
+
+          <label style="font-size:9px;color:gray;">The email you use to log in to Pingdom.</label></br></br>
+
+          <label style="font-size:20px;font-weight:normal;">Password</label></br>
+          
+          <%= f.password_field :ds_pass, :class => 'form-control', :placeholder => "Password" %>
+          <label style="font-size:9px;color:gray;">The password you use to log in to Pingdom.</label></br></br>
+
+          <label style="font-size:20px;font-weight:normal;">Application Key</label></br>
+          
+          <%= f.text_field :ds_appkey, :class => 'form-control', :placeholder => "Application Key" %>
+          <label style="font-size:9px;color:gray;">The key for the specific application you want in Pingdom.</label></br></br>
+
+        </div>
+        <div class="modal-footer">
+          <%= link_to 'Unlink', destroy_pingdom_link_metric_path(f), method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-warning' %>
+          <button type="submit" class="btn btn-info">Update</button>
+
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+        </div>
+        <%end%>
+        
+      </div><!-- /.modal-content -->
+    </div>
+</div>
+
+<div class="modal fade" id="updatemodalsut" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h2 class="modal-title">Update Siteuptime Account</h2>
+        </div>
+        <%= form_for @datasourcesut, :url=>siteuptime_auth_update_metrics_path, method: :put  do |f| %>
+        <div class="modal-body">
+          <label style="font-size:20px;font-weight:normal;">Email</label></br>
+
+          
+
+          <%= f.text_field :ds_email, :class => 'form-control', :placeholder => "Email" %>
+
+          <label style="font-size:9px;color:gray;">The email you use to log in to Siteuptime.</label></br></br>
+
+          <label style="font-size:20px;font-weight:normal;">Password</label></br>
+          
+          <%= f.password_field :ds_pass, :class => 'form-control', :placeholder => "Password" %>
+          <label style="font-size:9px;color:gray;">The password you use to log in to Siteuptime.</label></br></br>
+
+
+        </div>
+        <div class="modal-footer">
+          <%= link_to 'Unlink', destroy_siteuptime_link_metric_path(f), method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-warning' %>
+          <button type="submit" class="btn btn-info">Update</button>
+
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+        </div>
+        <%end%>
+        
+      </div><!-- /.modal-content -->
+    </div>
+</div>
+
+
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h1 class="modal-title">Add a Metric</h1>
+        </div>
+        <%= form_for @updated_metric , :url=> add_metric_metrics_path, method: :post  do |f| %>
+        <div class="modal-body">
+          <label style="font-size:20px;font-weight:normal;">Select Source: </label>
+          
+          <%= f.select :datasourcearr, options_for_select(@userdatasources.collect{ |u| [u.source_name, u.id] }), prompt: "Select Datasource", class: "form-control" %>
+          
+         
+          </br></br>
+          <div id="change_name"></div>
+
+             <div id="display_name" style= "display:none">
+               <label style="font-size:20px;font-weight:normal;">Display Name: </label></br>
+               
+               <%= f.text_field :userdef_name, class: "form-control" %>
+            
+              </div>
+          
+          </br></br> 
+
+        </div>
+        <div class="modal-footer">
+          
+          <button type="submit" id="load_metric_button" class="btn btn-info disabled">Load Metric</button>
+
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+        </div>
+        <%end%>
+      </div><!-- /.modal-content -->
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+
+
+
+  $("#metric_datasourcearr").change(function(){
+
+   var selecteddatasource =  $("#metric_datasourcearr").val();
+
+
+      $.ajax({
+        url: "/metrics/get_options",
+        dataType: "html",
+        data: {'select_id': selecteddatasource},
+        async: false,
+         success: function(response){
+          $("#change_name").html(response);
+          $("#display_name").show();
+
+         } 
+      });
+  
+
+  });
+
+
+
+
+
+</script>

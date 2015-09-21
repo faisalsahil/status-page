@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  plan_type: 1
+  available_notifications: 1
+
+two:
+  plan_type: 1
+  available_notifications: 1

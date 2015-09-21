@@ -1,0 +1,53 @@
+<script type="text/javascript">
+  var d = document.getElementById("mainten");
+d.className = d.className + " active";
+</script>
+<% if @components.present? %>
+  <%= link_to "+ Maintenance",new_maintenance_path, class: "btn btn-success pull-right"%>
+<% else %>
+  <%= link_to "+ Maintenance",components_path({notice: "Please create component first"}), class: "btn btn-success pull-right"%>
+<% end %>
+<h2>Scheduled Maintenance</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Belongs To</th>
+      <th>Start Time</th>
+      <th>End Time</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @maintenances.try(:each) do |main| %>
+      <tr>
+        <td>
+          <%= link_to "#{main.try(:title)}", maintenance_path(main) %>
+        </td>
+        <td>
+          <%= main.try(:description) %>
+        </td>
+        <td>
+          <% if Status.find(@components.find(main.try(:component_id)).try(:status_id)).try(:name) == current_user.try(:statuses).try(:first).try(:name)%>
+            <span class="badge" style="background-color:green;">&nbsp;</span>
+          <% else %>
+            <span class="badge" style="background-color:red;">&nbsp;</span>
+          <% end %>
+
+          <%= @components.find(main.try(:component_id)).try(:name)%>
+        </td>
+        <td>
+          <%= ActiveSupport::TimeZone[current_user.time_zone].parse(main.start_at.to_s) %>
+        </td>
+        <td>
+          <%= ActiveSupport::TimeZone[current_user.time_zone].parse(main.end_at.to_s) %>
+        </td>
+        <td>
+          <%= link_to 'Edit',edit_maintenance_path(main) %>&nbsp;&nbsp;
+          <%= link_to 'Delete', maintenance_path(main), method: :delete, data: { confirm: 'Are you sure?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

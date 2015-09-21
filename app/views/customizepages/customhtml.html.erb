@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Status Page</title>
+    <%= stylesheet_link_tag    "application", :media => "all" %>
+    <%= javascript_include_tag "application" %>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
+    <div id="wrapper">
+      <header class="navbar navbar-inverse" role="banner">
+        <div class="container">
+          <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <i class="fa fa-cog"></i>
+            </button>
+            <!--  <a href="<%#= home_index_path %>" class="navbar-brand navbar-brand-img">
+              <img src="<%#=asset_path "logo.png"%>" alt="MVP Ready">
+            </a> -->
+          </div> <!-- /.navbar-header -->
+          <% if current_user && current_user.customizepage.present? %>
+            <%= form_for @customizepage, :url=>css_html_update_customizepage_path(@customizepage), method: :put do |f| %>
+              <nav class="collapse navbar-collapse" role="navigation">
+                <ul class="nav navbar-nav navbar-right">    
+                  <% if current_user && current_user.customizepage.present? %>
+                    <li>
+                      <%= link_to "View Status Page", customizepage_path(current_user.customizepage), :target => "_blank" %>
+                      <!-- <a href="<%= customizepages_path(@current_user)  %>">View Status Page</a> -->
+                    </li> 
+                    <li>
+                        <button style="margin-top:13px;margin-left:5px;" type="submit" class="btn btn-success" name="save-changes" >Save All Changes</button>
+                    </li>
+                  <% end %>
+                </ul>
+              </nav>
+        </div> <!-- /.container -->
+      </header>
+
+      <div class="mainnav">
+        <div class="container">
+          <a class="mainnav-toggle" data-toggle="collapse" data-target=".mainnav-collapse">
+            <span class="sr-only">Toggle navigation</span><i class="fa fa-bars"></i>
+          </a>
+        </div> <!-- /.container -->
+      </div> <!-- /.mainnav -->
+
+      <div class="content">
+        <div class="layout layout-main-right layout-stack-sm editor"> 
+          <!-- Sidebar -->
+          <div class="col-md-3 col-sm-4 layout-sidebar ">
+            <div class="widget">
+              <div class="head">
+                <h2>Custom css</h2>
+              </div>
+              <%= f.text_area :customcss, :rows => 3 %>
+              <!-- <textarea class="form-control" rows="3"></textarea> -->
+            </div>
+            <div class="widget">
+              <div class="head">
+                <h2>Custom Header HTML </h2>
+              </div>
+              <%= f.text_area :customheader, :rows => 3 %>
+              <!-- <textarea class="form-control" rows="3"></textarea> -->
+            </div>
+            <div class="widget">
+              <div class="head">
+                <h2>Custom Footer HTML </h2>
+              </div>
+              <%= f.text_area :customfooter, :rows => 3 %>
+              <!-- <textarea class="form-control" rows="3"></textarea> -->
+            </div>
+          </div>
+          
+          <!-- Sidebar End --> 
+          <!-- /.col --> 
+          
+          <!-- Contact -->
+          
+          <div class="col-md-9 col-sm-8 layout-main"> 
+            <% if current_user && current_user.customizepage.present? %>
+              <iframe frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="<%= customizepage_path(current_user.customizepage) %>">
+            <% end %>
+            </iframe>
+          </div>
+        <!-- Contact End --> 
+        </div>
+        <!-- /.row --> 
+      </div>
+
+      <% end %>
+      <% end %>
+    
+    </div> <!-- /#wrapper -->
+
+    <footer class="footer">
+      <div class="container">
+        <p class="pull-left">Copyright &copy; 2013 MVP Ready.</p>
+      </div>
+    </footer>
+
+
+    <!-- 
+     Bootstrap core JavaScript
+    ================================================== 
+     Core JS
+    <script src="<%#=asset_path "js/libs/jquery-1.10.2.min.js"%>"></script>
+    <script src="<%#=asset_path "js/libs/bootstrap.min.js" %>"></script>
+
+    [if lt IE 9]>
+    <script src="./js/libs/excanvas.compiled.js"></script>
+    <![endif]
+
+     Plugin JS 
+    <script src="./js/plugins/flot/jquery.flot.js"></script>
+    <script src="./js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="./js/plugins/flot/jquery.flot.pie.js"></script>
+    <script src="./js/plugins/flot/jquery.flot.resize.js"></script>
+
+    App JS
+    <script src="./js/mvpready-core.js"></script>
+    <script src="./js/mvpready-admin.js"></script>
+
+     Plugin JS 
+    <script src="./js/demos/flot/line.js"></script>
+    <script src="./js/demos/flot/pie.js"></script>
+    <script src="./js/demos/flot/auto.js"></script>
+
+     -->
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $(".pick-a-color").pickAColor({
+          showSpectrum            : true,
+          showSavedColors         : true,
+          saveColorsPerElement    : true,
+          fadeMenuToggle          : true,
+          showAdvanced            : true,
+          showBasicColors         : true,
+          showHexInput            : true,
+          allowBlank              : true,
+          inlineDropdown          : true
+        });
+      });
+    </script>
+  </body>
+</html>

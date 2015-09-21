@@ -1,0 +1,130 @@
+<div class="layout layout-stack-sm layout-main-right">
+
+  <div class="col-sm-3 layout-sidebar">
+
+    <div class="nav-layout-sidebar-skip">
+      <strong>Tab Navigation</strong> / <a href="#settings-content">Skip to Content</a> 
+    </div>
+
+    <ul id="myTab" class="nav nav-layout-sidebar nav-stacked">
+      <li class="active">
+        <a href="#profile-tab" data-toggle="tab">
+          <i class="fa fa-lsit-alt"></i> 
+          &nbsp;&nbsp;Customize Status Page
+        </a>
+      </li>
+    </ul>
+
+  </div> <!-- /.layout-sidebar -->
+
+  <div class="col-sm-9 layout-main">
+
+    <div class="tab-content stacked-content">
+      <div class="tab-pane fade in active" id="profile-tab">
+
+        <h3 class="content-title">
+          <span>Customize Status Page</span>
+        </h3>
+
+        <div class="col-md-6">  
+          <h4>Design One</h4>
+           <a href="<%= asset_path "img/theme1.png"%>" target="_blank" class="thumbnail-view-hover ui-lightbox">
+              <img src="<%= asset_path "img/theme1.png"%>" style="width: 100%" alt="Gallery Image"></a>
+            <br /><br />
+
+            <div class="form-group">
+
+              <div class="radio">
+                <label>
+                  <input type="radio" name="radio-1" class="parsley-validated" data-required="true">
+                  Select Style One
+                </label>
+              </div> <!-- /.radio -->
+
+            </div> <!-- /.form-group -->
+
+            <hr />
+
+            <div class="fileinput fileinput-new pull-center" data-provides="fileinput">
+              <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+                <img src="<%= asset_path "img/ipad.png"%>" alt="...">
+              </div>
+              <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+              <div>
+                <span class="btn btn-primary btn-file"><span class="fileinput-new">Select Logo</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+              </div>
+            </div>
+
+              <br />
+
+            <div class="fileinput fileinput-new pull-center" data-provides="fileinput">
+              <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+                <img src="<%= asset_path "img/ipad.png"%>" alt="...">
+              </div>
+              <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+              <div>
+                <span class="btn btn-primary btn-file"><span class="fileinput-new">Select Favicon</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+              </div>
+            </div>
+
+            <hr />
+            <label>Background Color</label>
+            <input type="text" value="ffffff" name="backgound-color" class="pick-a-color form-control">
+            <hr />
+            <label>Font Color</label>
+            <input type="text" value="000000" name="font-color" class="pick-a-color form-control">
+            <hr />
+            <label>Link Color</label>
+            <input type="text" value="0000ff" name="link-color" class="pick-a-color form-control">
+            <hr />
+            <br /><br />
+
+            <input type="button" class="btn btn-success" name="save-changes" value="Save All Changes" />
+
+
+          </div>
+
+          <div class="col-md-6">  
+           <h4>Style Two</h4> 
+           
+            <a href="<%= asset_path "img/theme2.png"%>" target="_blank" class="thumbnail-view-hover ui-lightbox">
+              <img src="<%= asset_path "img/theme2.png"%>" style="width: 100%" alt="Gallery Image"></a>
+            
+            <br /><br /><br />
+            <div class="form-group">
+
+              <div class="radio">
+                <label>
+                  <input type="radio" name="radio-1" class="parsley-validated" data-required="true">
+                  Select Style Two
+                </label>
+              </div> <!-- /.radio -->
+            </div> <!-- /.form-group -->
+            <hr />
+            <div class="fileinput fileinput-new pull-left" data-provides="fileinput">
+              <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+                <img src="<%= asset_path "img/ipad.png"%>" alt="...">
+              </div>
+              <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+              <div>
+                <span class="btn btn-primary btn-file"><span class="fileinput-new">Select Cover Image</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+              </div>
+            </div>
+            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+            <hr />
+            <label>Yellows-Server Degraded Symbol</label> 
+            <input type="text" value="ffff00" name="status-degraded" class="pick-a-color form-control">
+            <hr />
+            <label>Reds-Major Outages Symbol</label>
+            <input type="text" value="ff0000" name="status-major-outages" class="pick-a-color form-control">
+            <hr />
+            <label>Greens-Everything's Ok Symbol</label>
+            <input type="text" value="008000" name="status-ok" class="pick-a-color form-control">
+          </div>
+        </div>
+      </div> <!-- /.tab-pane -->
+    </div> <!-- /.layout-main -->
+  </div> <!-- /.layout -->

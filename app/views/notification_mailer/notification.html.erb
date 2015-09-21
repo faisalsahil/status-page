@@ -1,0 +1,8 @@
+
+<% str = @c_user.try(:emailbodyformat) %>
+
+<% str = str.gsub("$$component_name$$",@component) %>
+<% str = str.gsub("$$component_status$$",@status) %>
+
+<%= str %>
+

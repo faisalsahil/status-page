@@ -1,0 +1,49 @@
+#!/usr/bin/env ruby
+require "rubygems"
+require "bundler/setup"
+require "mailman"
+
+Mailman.config.pop3 = {
+  server: 'pop.gmail.com', port: 995, ssl: true,
+  username: "statuspageserver@gmail.com",
+  password: "testserver1234"
+  # :address    => "pop.gmail.com",
+  # :port       => 995,
+  # :user_name  => 'statuspageserver@gmail.com',
+  # :password   => 'testserver1234',
+  # :enable_ssl => true
+}
+
+Mailman::Application.run do
+  default do
+    begin
+      Component.update_by_email(message)
+    rescue Exception => e
+      Mailman.logger.error "Exception occurred while receiving message:\n#{message}"
+      Mailman.logger.error [e, *e.backtrace].join("\n")
+      puts 'error occured in mailman server'
+    end
+
+
+   	#puts message.body.decoded
+ 	#pop = Net::POP3.new('pop.gmail.com')
+	# pop.start('statuspageserver@gmail.com', 'testserver1234')             # (1)
+	# if pop.mails.empty?
+	#   puts 'No mail.'
+	# else
+	#   i = 0
+	#   pop.each_mail do |m|   # or "pop.mails.each ..."   # (2)
+	#   	puts 'a'*20
+	#     File.open("inbox/#{i}", 'w') do |f|
+	#       f.write m.pop
+	#       puts 'b'*20
+	#     end
+	#     m.delete
+	#     i += 1
+	#     puts 'c'*20
+	#   end
+	#   puts "#{pop.mails.size} mails popped."
+	# end
+	# pop.finish 
+  end
+end

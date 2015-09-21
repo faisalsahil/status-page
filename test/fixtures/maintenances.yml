@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  tile: MyString
+  description: MyString
+  start_at: MyString
+  end_at: MyString
+  component_id: 1
+
+two:
+  tile: MyString
+  description: MyString
+  start_at: MyString
+  end_at: MyString
+  component_id: 1

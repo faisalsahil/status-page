@@ -1,0 +1,42 @@
+<script type="text/javascript">
+$(document).ready(function () {
+   $('#secure_image').css("margin-left","400px");
+});
+
+</script>
+  <div class="alert alert-info" style="height:50px;">
+    <h4>Selected Plan: <%= @plan && @plan.plan_type%> </h4>
+  </div>
+
+  <%= form_for @payment, :url=> payments_path, :html => { :class => ' payment-form' } do |f| %>
+    <% if @plan.present? %>
+      <%= f.hidden_field :plan_id, :value=> @plan.id %>
+    <% end %>
+    <div class="bs-docs-example">
+        <div class="control-group">
+            <%= f.label "card_number", "Credit Card Number ", :class => 'control-label' %>
+            <div class="controls">
+              <%= f.text_field :card_number, :class=>"card_number"%>
+            </div>
+        </div>
+            
+        <div class="control-group">
+            <%= f.label :card_code, "Security Code on Card (CVV)", :class => 'control-label' %>
+            <div class="controls">
+              <%= f.text_field :card_code,:class=>"card-cvc" %>
+            </div>
+        </div>
+        <div class="control-group">
+          <%= label_tag :card_exp_date, "Card Expiration", :class => 'card_exp_date control-label' %>
+          <div class="controls">
+          <%= select_month nil, {add_month_numbers_true: true}, {name: nil, id: "card_month", style: "width: 14%;"}%>
+          <%= select_year nil, {start_year: Date.today.year, end_year: Date.today.year+15}, {name: nil, id: "card_year", style: "width: 8%;"}%>
+          </div>
+        </div>
+
+    <div class="form-actions">
+    <br/>
+      
+      <%= link_to "Submit","javascript:void(0)", :class => 'btn btn-primary',:id=>"validate-and-submit-card-info" %>
+    </div>
+  <% end %>

@@ -1,0 +1,2 @@
+module CustomizepagesHelper
+end

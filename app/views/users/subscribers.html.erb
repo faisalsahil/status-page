@@ -1,0 +1,57 @@
+<script type="text/javascript">
+  var d = document.getElementById("subs");
+d.className = d.className + " active";
+</script>
+<h1>Subscribers</h1>
+
+
+<ul class="nav nav-tabs">
+  <li class="<%= 'active' if params[:tab] == 'email' || !params[:tab]%>"><a href="#email" data-toggle="tab">Email Subscribers</a></li>
+  <li class="<%= 'active' if params[:tab] == 'sms' %>"><a href="#sms" data-toggle="tab">SMS Subscribers</a></li>
+</ul>
+
+<div class="tab-content">
+
+	<div class="<%= if (params[:tab] == 'email' || !params[:tab])then 'tab-pane active'  else 'tab-pane' end%>" id="email">
+		<h3>Email Subscribers</h3>
+
+		<table class="table table-striped">
+			<thead>
+				<td><strong>Email</strong></td>
+				<td><strong>Action</strong></td>
+			</thead>
+			<% @subscribers && @subscribers.try(:each) do |subscriber|%>
+				<tr>
+				<td>
+					<%= subscriber.email %>
+				</td>
+				<td>
+					<%= link_to 'Delete', delete_subscriber_user_path(subscriber),method: :post, data: { confirm: 'Are you sure?' } %>
+				</td>
+				</tr>
+			<% end %>
+		</table>
+	</div>
+
+	<div class="<%= if (params[:tab] == 'sms')then 'tab-pane active'  else 'tab-pane' end%>" id="sms">
+		<h3>SMS Subscribers</h3>
+
+		<table class="table table-striped">
+			<thead>
+				<td><strong>Phone Number</strong></td>
+				<td><strong>Action</strong></td>
+			</thead>
+			<% @clients && @clients.try(:each) do |client|%>
+				<tr>
+				<td>
+					<%= client.phone %>
+				</td>
+				<td>
+					<%= link_to 'Delete', delete_client_user_path(client),method: :post, data: { confirm: 'Are you sure?' } %>
+				</td>
+				</tr>
+			<% end %>
+		</table>
+	</div>
+
+</div>

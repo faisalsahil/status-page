@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+<channel>
+<title>Components Feed</title>
+<link>http://www.statuspage.com/</link>
+<description>Following are the recent components that are changed.</description>
+
+<% @components.each do |component| %>
+  <item>
+    <title><%=component.name%></title>
+    <link><%= component_path(component)%></link>
+    <guid><%= component_path(component)%></guid>
+    <pubDate><%=ActiveSupport::TimeZone[@user.time_zone].parse(component.created_at.to_s(:rfc822)).utc.to_datetime.strftime('%a, %d %b %Y %H:%M:%S')%></pubDate>
+    <description>Status: <%= Status.find(component.status_id).name if component.status_id.present? %></description>
+  </item>
+<% end %>
+
+</channel>
+</rss>

@@ -1,0 +1,27 @@
+<script type="text/javascript">
+  var d = document.getElementById("incid");
+d.className = d.className + " active";
+</script>
+<div class="page-header">
+  <h2><%= @incident.name %></h2>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong>Name</strong></dt>
+  <dd><%= @incident.name %></dd>
+  <dt><strong>Belongs to Component:</strong></dt>
+  <% compName = Component.find_by_id(@incident.component_id)%>
+  <dd><%= compName.name %></dd>
+  <dt><strong>Current State</strong></dt>
+  <% st = State.find_by_id(@incident.status.to_i) %>
+  <dd><%= st.name %></dd>
+  <dt><strong>Description</strong></dt>
+  <dd><%= @incident.message %></dd>
+</dl>
+
+<div class="form-actions">
+  <%= link_to 'Update',edit_incident_path(@incident), :class => 'btn btn-mini btn-info' %>
+  &nbsp;&nbsp;
+  <%= link_to 'Back',incidents_path, :class => 'btn btn-mini btn-primary' %>
+</div>
+  

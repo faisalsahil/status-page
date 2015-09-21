@@ -1,0 +1,66 @@
+<script type="text/javascript">
+  var d = document.getElementById("mainten");
+d.className = d.className + " active";
+</script>
+
+<div id="newForm">
+    <h2>Schedule a Maintenance</h2>
+
+    <div class="well well-lg">
+      <%= form_for :maintenance, :url => {:action => :create} do |f| %>
+      
+      <div class="field">
+        <label style="font-family: 'Oswald';font-size: 20px">Select component</label></br>
+        <%= f.select :component_id ,options_for_select(@components.map { |sq| ["#{sq.name}", sq.id] }), :class=>'form-control' %>
+      </div>
+
+      <div class="field">
+        <label style="font-family: 'Oswald';font-size: 20px">Maintenance Title</label></br>
+        <%= f.text_field :title, :required => true, :class => 'form-control', :placeholder => 'Maintenance Title' %>
+
+      </div>
+      
+      <div class="field">
+        <label style="font-family: 'Oswald';font-size: 20px">Description</label></br>
+        <%= f.text_area :description, :class => 'form-control', :rows => '5', :placeholder => 'Type maintenance details here...' %></br>
+      </div>
+
+      <div class="field">
+        <label style="font-family: 'Oswald';font-size: 20px">Start Time</label></br>
+        <div class='input-group date' id='datetimepicker' style="width:300px;">
+            <input id="start" type='text' class="form-control" name="maintenance[start_at]" required />
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+        
+      </div><br/>
+
+      <div class="field">
+        <label style="font-family: 'Oswald';font-size: 20px">End Time</label></br>
+        <div class='input-group date' id='datetimepicker1' style="width:300px;">
+            <input id="end" type='text' class="form-control" name="maintenance[end_at]" required />
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+
+      </div><br/>
+      <div class="actions">
+      
+        <button id="submit" type="submit" class="btn btn-primary btn-lg" >Schedule</button>
+      </div>
+      <% end %>
+      <br/><br/>
+    </div>
+  </div>
+  <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker').datetimepicker({
+                    pick12HourFormat: true,
+                    format: 'ddd, DD MMM YYYY hh:mm:ss Z'
+                });
+                $('#datetimepicker1').datetimepicker({
+                    pick12HourFormat: true,
+                    format: 'ddd, DD MMM YYYY hh:mm:ss Z'
+                });
+            });
+        </script>

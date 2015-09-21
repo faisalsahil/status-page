@@ -1,0 +1,158 @@
+ <%= javascript_include_tag "bootstrap-colorpicker" %>
+ <script type="text/javascript">
+     var d = document.getElementById("custom");
+     d.className = d.className + " active";
+
+     $(document).ready(function(){
+        $('.color').colorpicker();
+
+    });
+ </script>
+
+
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#home" data-toggle="tab">Customize Design</a></li>
+
+  <li><a href="/customizepages/customhtml" target="_blank" >Custom CSS / HTML</a></li>
+</ul>
+
+<div class="tab-content">  
+    <div class="tab-pane active" id="home">
+        <%= form_for @customizepage , :html => {:multipart => true} do |f| %>
+            <div class="col-md-6">  
+            </br>
+                <p class=""><strong>Status Page Title</strong></p>
+                <%= f.text_field :logoname, :value => @customizepage.logoname, style: 'width:340px' %>
+                </br></br>
+                <p class=""><strong>Components Title</strong></p>
+                <%= f.text_field :systemcomponentstitle, :value => @customizepage.systemcomponentstitle, style: 'width:340px' %>
+
+
+                </br></br>
+
+               
+                <hr />
+                </br>
+                <div class="pull-left" style="margin-right:150px; margin-top:70px;">
+                <p class=""><strong>Select Favicon</strong></p>
+                <div class="fileinput fileinput-new" data-provides="fileinput">
+
+                    <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;">    
+                    </div>
+                    <div>
+                        <span class="btn btn-primary btn-file"><span class="fileinput-new">Update Favicon</span><span class="fileinput-exists">Change</span>
+                            <%= f.file_field :favicon %>
+                    <!-- <input type="file" name="..."> -->
+                        </span>
+                        <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                </div>
+                </div>
+
+
+                <div class="pull-left">
+                 <p class=""><strong>Upload Logo (100x200)</strong></p>
+                <div class="fileinput fileinput-new" data-provides="fileinput">
+                    <div class="fileinput-new thumbnail" style="width: 100px; height: 70px;">
+                        <%= image_tag(@customizepage.logo_url) if current_user.try(:customizepage).try(:logo).present?%>
+                        <% if @customizepage.try(:logo).blank? %>
+                        <img src="<%= asset_path "img/ipad.png"%>" alt="...">
+                        <%end%>
+                    </div>
+                    <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 70px;"></div>
+
+                    <div>
+                        <span onclick="getImgSize(this);" class="btn btn-primary btn-file"><span class="fileinput-new">Upload Logo</span><span class="fileinput-exists">Change</span>
+                            <%= f.file_field :logo %>
+                            <!-- <input type="file" name="..."> -->
+                        </span>
+                        <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                </div>
+                </div>
+                </br></br></br></br></br></br></br></br></br></br>
+                <hr />
+                <label><strong>Background Color</strong></label>
+                <div id="colorpicker" class="input-append color" data-color="<%= @customizepage.background_color %>" data-color-format="hex">
+                    <%= f.text_field :background_color, :class => 'pick-a-color form-control', :value => @customizepage.background_color %>
+                    <span class="add-on"><i style="background-color: <%= @customizepage.background_color %>"></i></span>
+                </div>
+                <!-- <input type="text" class="span3" value="" name="customizepage[background_color]"/> -->
+                <!-- <input type="text" value="ffffff" name="backgound-color" class="pick-a-color form-control"> -->
+                <hr />
+                <label><strong>Font Color</strong></label>
+
+                <div id="colorpicker" class="input-append color" data-color="<%= @customizepage.font_color %>" data-color-format="hex">
+                    <%= f.text_field :font_color, :class => 'pick-a-color form-control', :value => @customizepage.font_color %>
+                    <span class="add-on"><i style="background-color: <%= @customizepage.font_color %>"></i></span>
+                </div>
+                <!-- <input type="text" value="000000" name="font-color" class="pick-a-color form-control"> -->
+                <hr />
+                <label><strong>Link Color</strong></label>
+
+                <div id="colorpicker" class="input-append color" data-color="<%= @customizepage.link_color %>" data-color-format="hex">
+                    <%= f.text_field :link_color, :class => 'pick-a-color form-control', :value => @customizepage.link_color %>
+                    <span class="add-on"><i style="background-color: <%= @customizepage.link_color %>"></i></span>
+                </div>
+                <!-- <input type="text" value="0000ff" name="link-color" class="pick-a-color form-control"> -->
+                <hr />
+                <br /><br />
+
+                <button type="submit" class="btn btn-success" name="save-changes" >Save All Changes</button>
+            </div>
+            <div class="col-md-6">
+            </br>
+                <p><strong>Description Title</strong></p>
+                <%= f.text_field :abouttexttitle, :value => @customizepage.abouttexttitle, style: 'width:340px' %>
+                <p class=""><strong>Description</strong></p>
+                <%= f.text_area :abouttext, :rows => 3, :value => @customizepage.abouttext, style: 'max-height:65px; max-width:340px'%>
+                <hr />
+                 </br>
+                <%= f.check_box :coverimageshow %> Enable Cover Image (Enabling Cover Image will disable Logo)
+                </br> </br>
+                <p class=""><strong>Select Cover Image (Width must be greater than 899px)</strong></p>
+                <div class="fileinput fileinput-new" data-provides="fileinput">
+                    <div class="fileinput-new thumbnail" style="width: 200px; height: 70px;">
+                        <%= image_tag(@customizepage.coverimage_url) if current_user.try(:customizepage).try(:coverimage).present?%>
+                        <% if @customizepage.try(:coverimage).blank? %>
+                        <img src="<%= asset_path "img/ipad.png"%>" alt="...">
+                        <%end%>
+                    </div>
+                    <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 70px;"></div>
+
+                    <div>
+                        <span class="btn btn-primary btn-file"><span class="fileinput-new">Upload Cover Image</span><span class="fileinput-exists">Change</span>
+                            <%= f.file_field :coverimage %>
+                            <!-- <input type="file" name="..."> -->
+                        </span>
+                        <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                </div>
+                <hr />
+
+                <label><strong>Yellows-Maintenance Symbol</strong></label>
+                <div id="colorpicker" class="input-append color" data-color="<%= @customizepage.yellows %>" data-color-format="hex"> 
+                    <%= f.text_field :yellows, :class => 'pick-a-color form-control', :value => @customizepage.yellows %> 
+                    <span class="add-on"><i style="background-color: <%= @customizepage.yellows %>"></i></span>
+                </div>
+                <!-- <input type="text" value="ffff00" name="status-degraded" class="pick-a-color form-control"> -->
+                <hr />
+                <label><strong>Reds-Interruptions Symbol</strong></label>
+                <div id="colorpicker" class="input-append color" data-color="<%= @customizepage.reds %>" data-color-format="hex">
+                    <%= f.text_field :reds, :class => 'pick-a-color form-control', :value => @customizepage.reds %>
+                    <span class="add-on"><i style="background-color: <%= @customizepage.reds %>"></i></span>
+                </div> 
+                <!-- <input type="text" value="ff0000" name="status-major-outages" class="pick-a-color form-control"> -->
+                <hr />
+                <label><strong>Greens-Everything's Ok Symbol</strong></label>
+                <div id="colorpicker" class="input-append color" data-color="<%= @customizepage.greens %>" data-color-format="hex">
+                   <%= f.text_field :greens, :class => 'pick-a-color form-control', :value => @customizepage.greens %>
+                   <span class="add-on"><i style="background-color: <%= @customizepage.greens %>"></i></span>
+                </div>
+                <!-- <input type="text" value="008000" name="status-ok" class="pick-a-color form-control"> -->
+            </div>
+        <% end %>
+    </div> <!--   Home tab ending    -->
+
+</div>
+        

@@ -1,0 +1,146 @@
+<script type="text/javascript">
+	var d = document.getElementById("incid");
+d.className = d.className + " active";
+
+
+$( document ).ready(function() {
+   myradio1= $("input[type=radio][name='<%= @statfirst.id %>']:checked").val();
+
+    document.getElementById('compId').value = $("input[type=radio][name='<%= @statfirst.id %>']:checked").attr('name');   //////this is the component id
+	document.getElementById('statId').value = $("input[type=radio][name='<%= @statfirst.id %>']:checked").attr('id'); ////// this is the status id
+    document.getElementById('statName').value = $("input[type=radio][name='<%= @statfirst.id %>']:checked").val();
+
+});
+
+</script>
+<div id="newForm">
+		<h2>Create an incident</h2>
+
+		<div class="well well-lg">
+			<%= form_for :incident, :url => {:action => :create} do |f| %>
+			
+			<div class="field">
+				<label style="font-family: 'Oswald';font-size: 20px">Select component</label></br>
+				<%= f.select :component_id ,options_for_select(@components.map { |sq| ["#{sq.name}", sq.id] }), :class=>'form-control' %>
+			</div>
+
+			<div class="field">
+				<label style="font-family: 'Oswald';font-size: 20px">Component Status</label></br>
+				<div id="compStatus">
+					<% @statuses.each do |status|%>
+						<label style="font-weight:normal;font-family: 'Oswald';font-size: 16px; margin-right:20px;margin-left:8px" >
+							<% if @statfirst.status_id == status.id %>
+								<input onclick="statusChange(this)" id="<%= status.id %>" name="<%= @statfirst.id %>" type="radio" value='<%= "#{status.name}"%>' checked/>
+							<% else %>
+								<input onclick="statusChange(this)" id="<%= status.id %>" name="<%= @statfirst.id %>" type="radio" value='<%= "#{status.name}"%>' />
+							<% end %>
+							&nbsp; <%= "#{status.name}"%>
+						</label>
+					<%end%>
+				</div>
+			</div>
+
+			<div class="field">
+				<label style="font-family: 'Oswald';font-size: 20px">Incident Name</label></br>
+				<%= f.text_field :name, :required => true, :class => 'form-control', :placeholder => 'Incident Name' %>
+
+				<%= f.hidden_field :compId, :id => 'compId' %>
+				<%= f.hidden_field :statId, :id => 'statId' %>
+				<%= f.hidden_field :statName, :id => 'statName' %>
+
+			</div>
+			<div class="field">
+				<label style="font-family: 'Oswald';font-size: 20px">Current State</label></br>
+				<% mycount = 0 %>
+				<% @states.try(:each) do |state| %>
+					<% if mycount > 0%>
+			          <label style="font-weight:normal;font-family: 'Oswald';font-size: 16px; margin-right:20px;margin-left:8px" >
+			            <%= f.radio_button :status, state.try(:id) %>&nbsp; <%= state.try(:name) %> 
+			          </label>
+			        <%else%>
+			        <label style="font-weight:normal;font-family: 'Oswald';font-size: 16px; margin-right:20px;margin-left:8px" >
+			            <%= f.radio_button :status, state.try(:id), checked: true %>&nbsp; <%= state.try(:name) %>
+			          </label>
+			        <%end%>
+			        <% mycount += 1 %>
+        		<%end%>
+				</br></br>
+			</div>
+			<div class="field">
+				<label style="font-family: 'Oswald';font-size: 20px">Details</label></br>
+				<%= f.text_area :message, :class => 'form-control', :rows => '5', :placeholder => 'Type your message here...' %></br>
+			</div>
+			<div class="actions">
+			
+				<button type="submit" class="btn btn-primary btn-lg" >Create Incident</button>
+			
+				<a href="#create_notif_modal" data-toggle="modal" class="btn btn-info btn-lg" >Create and Notify</a>
+			</div>
+			
+			<br/><br/>
+		</div>
+	</div>
+
+<div class="modal fade" id="create_notif_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button"  class="close myReset" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h1 class="modal-title">Notify via</h1>
+        </div>
+        
+        <div class="modal-body">
+       
+          
+          <label><input id="tweedid" name="tweet" type="checkbox" value='tweet'/> Tweet</label>
+          </br>
+          <label><input id="emailid" name="email" type="checkbox" value='email'/> Email</label>
+         </br>
+         <label><input id="smsid" name="sms" type="checkbox" value='sms'/> SMS</label>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-info">Create And Notify</button>
+            <button type="reset" class="btn btn-default myReset" data-dismiss="modal">Cancel</button>
+        </div>
+        <%end%>
+        
+      </div><!-- /.modal-content -->
+    </div>
+</div>
+
+<script type="text/javascript">
+
+	var myradio = null ; 
+	function statusChange(e) {
+	    myradio = e;
+
+	    document.getElementById('compId').value = myradio.name;   //////this is the component id
+		document.getElementById('statId').value = myradio.id; ////// this is the status id
+	    document.getElementById('statName').value = myradio.value;
+	}
+
+$('#create_notif_modal').on('hidden.bs.modal', function () {
+
+    $('#tweedid').prop('checked', false); 
+	$('#emailid').prop('checked', false); 
+	$('#smsid').prop('checked', false);
+})
+
+
+  $("#incident_component_id").change(function(){
+
+   var selectedcomponent =  $("#incident_component_id").val();
+      $.ajax({
+        url: "/incidents/get_component_status",
+        dataType: "html",
+        data: {'select_id': selectedcomponent},
+        async: false,
+         success: function(response){
+          $("#compStatus").html(response);
+        
+         } 
+      });
+  });
+
+</script>

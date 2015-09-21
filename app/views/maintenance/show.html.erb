@@ -1,0 +1,29 @@
+<script type="text/javascript">
+  var d = document.getElementById("mainten");
+d.className = d.className + " active";
+</script>
+
+<div class="page-header">
+  <h2><%= @maintenance.title %></h2>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong>Title</strong></dt>
+  <dd><%= @maintenance.title %></dd>
+  <dt><strong>Belongs to Component:</strong></dt>
+  <% compName = Component.find_by_id(@maintenance.component_id)%>
+  <dd><%= compName.name %></dd>
+  <dt><strong>Description</strong></dt>
+  <dd><%= @maintenance.description %></dd>
+  <dt><strong>Start Time</strong></dt>
+  <dd><%= ActiveSupport::TimeZone[current_user.time_zone].parse(@maintenance.start_at.to_s) %></dd>
+  <dt><strong>End Time</strong></dt>
+  <dd><%= ActiveSupport::TimeZone[current_user.time_zone].parse(@maintenance.end_at.to_s) %></dd>
+</dl>
+
+<div class="form-actions">
+  <%= link_to 'Update',edit_maintenance_path(@maintenance), :class => 'btn btn-mini btn-info' %>
+  &nbsp;&nbsp;
+  <%= link_to 'Back',maintenance_index_path, :class => 'btn btn-mini btn-primary' %>
+</div>
+  

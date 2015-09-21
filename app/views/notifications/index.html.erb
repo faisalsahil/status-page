@@ -1,0 +1,83 @@
+<script type="text/javascript">
+  var d = document.getElementById("notif");
+d.className = d.className + " active";
+</script>
+<h1>Notifications</h1>
+
+<h2>Incidents</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Current State</th>
+      <th>Description</th>
+      <th>Created At</th>
+      <th>Notify Via</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @incidents.each do |incident| %>
+      <tr>
+        <td>
+          <%= link_to "#{incident.try(:name)}", incident_path(incident) %>
+        </td>
+        <td>
+        <% st = State.find_by_id(incident.try(:status).to_i) %>
+          <%= st.try(:name) %>
+        </td>
+        <td>
+          <%= incident.try(:message) %>
+        </td>
+        <td>
+          <%= ActiveSupport::TimeZone[current_user.time_zone].parse(incident.created_at.to_s) %>
+        </td>
+        <td>
+          <%= link_to 'Email',sendIncidentEmail_notification_path(incident) %> &nbsp;&nbsp;
+          <%= link_to 'Tweet',sendIncidentTweet_notification_path(incident) %> &nbsp;&nbsp;
+          <%= link_to 'SMS',send_incident_sms_notification_path(incident) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br/>
+
+<div id="components">
+  <h2>Components</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Current Status</th>
+        <th>Description</th>
+        <th>Created At</th>
+        <th>Notify Via</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @components.each do |component| %>
+      <tr>
+        <td>
+          <%= link_to "#{component.try(:name)}", component_path(component) %>
+        </td>
+        
+        <td>
+          <%= Status.find(component.status_id).name if component.status_id.present? %>
+        </td>
+        <td>
+          <%= component.try(:description) %>
+        </td>
+        <td>
+          <%= ActiveSupport::TimeZone[current_user.time_zone].parse(component.created_at.to_s) %>
+        </td>
+        <td>
+          <%= link_to 'Email',sendComponentEmail_notification_path(component) %>&nbsp;&nbsp;
+          <%= link_to 'Tweet',sendComponentTweet_notification_path(component) %>&nbsp;&nbsp;
+          <%= link_to 'SMS',send_component_sms_notification_path(component) %>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

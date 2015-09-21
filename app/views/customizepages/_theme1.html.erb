@@ -1,0 +1,200 @@
+  <!DOCTYPE html>
+  <html lang="en">
+
+  <head>
+
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="">
+      <meta name="author" content="">
+
+      <title><%= current_user.username %> - Status Page</title>
+
+      <!-- Bootstrap Core CSS -->
+      <!-- <link href="css/theme2.css" rel="stylesheet"> -->
+      <%= stylesheet_link_tag "theme/theme2"%>
+
+
+      <!-- Custom CSS -->
+      <!-- <link href="css/theme1.css" rel="stylesheet"> -->
+      <%= stylesheet_link_tag "theme/theme1"%>
+
+    <%= @customizepage.try(:customcss).try(:html_safe) %>
+
+
+      <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+      <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+      <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+    <style>
+      body{
+        background-color: <%= @customizepage.background_color %>;
+        color: <%= @customizepage.font_color%>;
+      }
+      a {
+       color: <%= @customizepage.link_color%>; 
+      }
+
+    </style>
+  </head>
+
+  <body>
+      
+
+      <!-- Navigation -->
+      <%= @customizepage.try(:customheader).try(:html_safe) %>
+
+     
+      <!-- Page Content -->
+      <div class="container  main_content">
+
+
+          <!-- Jumbotron Header -->
+          <div class="banner">
+             
+
+           
+
+              <%= image_tag("theme/banner.png", class: "img-responsive") if @customizepage.try(:coverimage).blank?%>
+
+              <%= image_tag(@customizepage.coverimage_url, class: "img-responsive", style: "width:947px; height:315px") if current_user.try(:customizepage).try(:coverimage).present? %>
+
+
+              <!-- <img src="images/banner.png" class="img-responsive"> -->
+             
+              <div class=" caption"><a href="#"><h2> <strong><%= current_user.username %></strong></h2></a>
+  <button class="btn btn-primary btn-lg btn-sub  col-sm-4 col-md-3 col-md-offset-1  " data-toggle="modal" data-target="#myModal">
+    Subscribe to update
+  </button>
+    </div>
+          </div>
+
+          <hr>
+          <!-- Page Features -->
+         <!-- <div role="alert" class="alert alert-info heading col-xs-12 col-sm-12 col-md-12">
+        <strong>All Systems Operational</strong>
+     
+      </div> -->
+
+      <br /><br />
+      
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="myModalLabel">Subscribe to updates</h4>
+        </div>
+        <div class="modal-body">
+         <ul id="myTab" class="nav nav-tabs">
+     <li class="active">
+        <a href="#home" data-toggle="tab">
+           <span class="glyphicon glyphicon-envelope"></span>
+        </a>
+     </li>
+     <li><a href="#ios" data-toggle="tab"><span class="glyphicon glyphicon-earphone"></span></a></li>
+      <li><a href="#ejb" data-toggle="tab"><span class="glyphicon glyphicon-signal"></span></a></li>
+     
+  </ul>
+  <div id="myTabContent" class="tab-content">
+     <div class="tab-pane fade in active" id="home">
+        <p class="navbar-btn">Get email notifications whenever jawad creates or updates an incident</p>
+          <form role="form">
+            <div class="form-group">
+              
+              <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+            <button type="button" class="btn btn-primary col-xs-12 col-sm-12 col-md-12 navbar-btn">Save changes</button>
+              
+          </form>
+
+    </div>
+
+     </div>
+     <div class="tab-pane fade" id="ios">
+        <p class="navbar-btn">Get email notifications whenever jawad creates or updates an incident</p>
+        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+            <button type="button" class="btn btn-primary col-xs-12 col-sm-12 col-md-12 navbar-btn">Save changes</button>   </div>
+     
+     <div class="tab-pane fade" id="ejb">
+        <p class="navbar-btn">Get the <a href="#">Atom Feed</a> or <a href="#">RSS Feed</a>. 
+        </p>
+     </div>
+     
+  </div>
+  </form>
+
+        </div>
+      
+      </div>
+    </div>
+  </div>
+          <!-- /.row -->
+           <!-- Title -->
+          <div class="row">
+              <div class="col-lg-12">
+                  <h3><strong>About this site</strong></h3>
+                  <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>
+              </div>
+
+          </div>
+          <!-- /.row -->
+          <hr>
+          <!-- ===================== unresolved incidents here ======================= -->
+          <% @unresolved_incidents && @unresolved_incidents.each do |incident|%>
+            <div class="panel panel-primary">
+              <div class="panel-heading"><%= incident.try(:name)%></div>
+              <div class="panel-body">
+                <strong>Status:</strong><%= incident.try(:status)%><br/>
+                <strong>Message:</strong><%= incident.try(:message)%>
+              </div>
+            </div>
+
+          <% end %>
+
+          <hr>
+          <ul class="list-group">
+            <% @components && @components.each do |component|%>
+              <li class="list-group-item"> <span class="badge"><%= component.try(:status)%> </span> <%= component.try(:name)%> </li>
+            <% end %>
+          </ul>
+  <div class="row">
+       <div class="col-lg-12 content_area">
+                  <h3><strong>Past Incidents</strong></h3>
+               </div>
+    </div>
+        <% @incidents && @incidents.each do |incident| %>
+    <div class="details">
+     <strong><%= ActiveSupport::TimeZone[current_user.time_zone].parse(incident.created_at.to_s) %></strong><br/>
+      <span><%= incident.try(:name)%> </span><span class="pull-right"><%= incident.status%></span>
+      <hr>
+    </div>
+  <% end %>
+           <hr>
+          <%= @customizepage.try(:customfooter).try(:html_safe) %>
+          <br />
+          <span class="pull-right">Powered by StatusPage.com</span>
+  </div>
+
+           <!-- Footer -->
+          
+
+      </div>
+      </div>
+      <!-- /.container -->
+
+      <!-- jQuery Version 1.11.0 -->
+       <!-- <script src="js/theme1.js"></script> -->
+      <%= javascript_include_tag "theme/theme1" %>
+
+      <!-- Bootstrap Core JavaScript -->
+      <!-- <script src="js/theme2.js"></script> -->
+      <%= javascript_include_tag "theme/theme2" %>
+
+  </body>
+
+  </html>

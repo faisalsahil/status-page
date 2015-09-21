@@ -1,0 +1,17 @@
+ <label style="font-size:20px;font-weight:normal;">Check Name:</label>
+ <select id="metric_name" name="metric[name]">
+ <option value="">Select Check</option>
+ 	<% current_user.datasources.find_by_id(params[:select_id]).metrics.all.each do |datasource| %>
+		<option value="<%= datasource.id %>"><%= datasource.name %></option>
+	<% end %>
+</select>
+</br></br>
+
+
+
+<script type="text/javascript">
+	
+	$("#metric_name").change(function(){
+    $("#load_metric_button").removeClass("disabled");
+  });
+</script>

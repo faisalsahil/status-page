@@ -1,0 +1,3 @@
+class KEY_CONSTANT
+  PASSWORD = "fbsa4167729"
+end

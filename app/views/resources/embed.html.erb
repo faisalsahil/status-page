@@ -1,0 +1,147 @@
+<script type="text/javascript">
+  setInterval(function(){
+  	$.ajax({
+	    type: "get",
+	    url: "<%= j embed_resource_url(id: @user.try(:random_key))%>",
+	    dataType: "json",
+	    success: function(result){
+    		
+    		$("#tableBody").html("");
+    		$("#tableBody1").html("");
+				$("#userName").text(JSON.parse(result['user'])['username']);
+				if (JSON.parse(result['component']).length < 1){
+					$("#noComponent").text(
+						"There are no components available for given user!"
+					);
+				}
+				$.each(JSON.parse(result['component']), function(){
+					var metric = this;
+					var status = JSON.parse(result['status']);
+					var stat = null;
+					for (var i = 0; i < status.length; i++) {
+			        if(status[i].id == metric['status_id']){
+			        	stat = status[i].name;
+			        }
+			    }
+					$("#tableBody").append(					   
+				   "<tr>"+
+				   		"<td>"+metric['name']+"</td>"+
+				   		"<td>"+stat+"</td>"+
+				   	"</tr>"
+				   );
+				});
+
+				if (JSON.parse(result['incident']).length < 1){
+					$("#noIncident").text(
+						"There are no incidents available for given user!"
+					);
+				}
+				$.each(JSON.parse(result['incident']), function(){
+					var metric = this;
+					var state = JSON.parse(result['state']);
+					var stat = null;
+					var comp = JSON.parse(result['component']);
+					var name = null;
+					for (var i = 0; i < state.length; i++) {
+			        if(state[i].id == metric['status']){
+			        	stat = state[i].name;
+			        }
+			    }
+			    for (var i = 0; i < comp.length; i++) {
+			        if(comp[i].id == metric['component_id']){
+			        	name = comp[i].name;
+			        }
+			    }
+					$("#tableBody1").append(					   
+				   "<tr>"+
+				   		"<td>"+metric['name']+"</td>"+
+				   		"<td>"+name+"</td>"+
+				   		"<td>"+stat+"</td>"+
+				   		"<td>"+metric['message']+"</td>"+
+				   	"</tr>"
+				   );
+				});
+	    }
+		});
+  }, 60000);
+</script>
+<div id="data">
+	<h2>User Name: <strong id="userName"><%= @user.try(:username) %></strong></h2><br />
+	
+	<% if @components.present? %>
+		<h3>Components</h3>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<td>
+						<strong>Name of Component</strong>
+					</td>
+					<td>
+						<strong>Status</strong>
+					</td>
+				</tr>
+			</thead>
+			<tbody id="tableBody">
+				<% @components.each do |component| %>
+					<tr>
+						<td>
+							<%= component.try(:name) %>
+						</td>
+						<td>
+							<%= Status.find(component.try(:status_id)).try(:name) %>
+						</td>
+					</tr>
+				<% end %>
+			</tbody>
+		</table>
+	<% else %>
+		<div id="noComponent">
+			There are no components available for given user!
+		</div>
+	<% end %>
+	<br/>
+
+	<% if @incidents.present? %>
+		<h3>Incidents</h3>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<td>
+						<strong>Name of Incident</strong>
+					</td>
+					<td>
+						<strong>Belongs to</strong>
+					</td>
+					<td>
+						<strong>State</strong>
+					</td>
+					<td>
+						<strong>Message</strong>
+					</td>
+				</tr>
+			</thead>
+			<tbody id="tableBody1">
+				<% @incidents.each do |incident| %>
+					<tr>
+						<td>
+							<%= incident.try(:name) %>
+						</td>
+						<td>
+							<%= @components.find(incident.try(:component_id)).name %>
+						</td>
+						<td>
+							<%= State.find(incident.try(:status)).name %>
+						</td>
+						<td>
+							<%= incident.try(:message) %>
+						</td>
+					</tr>
+				<% end %>
+			</tbody>
+		</table>
+	<% else %>
+		<div id="noIncident">
+			There are no incidents available for given user!
+		</div>
+	<% end %>
+</div>

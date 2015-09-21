@@ -1,0 +1,164 @@
+<script type="text/javascript">
+	var d = document.getElementById("compo");
+d.className = d.className + " active";
+
+$(function() {
+    $( "#addDialog" ).dialog({
+      width: 400,
+      height: 210,
+      autoOpen: false,
+      show: {
+        effect: "clip",
+        duration: 600
+      },
+      hide: {
+        effect: "clip",
+        duration: 600
+      }
+    });
+    $( "#editDialog" ).dialog({
+      width: 400,
+      height: 210,
+      autoOpen: false,
+      show: {
+        effect: "slide",
+        duration: 700
+      },
+      hide: {
+        effect: "slide",
+        duration: 700
+      }
+    });
+    
+    $( "#addComponent" ).click(function() {
+      if ($("#editDialog").dialog( "isOpen" )){
+        $("#editDialog").dialog( "close" )
+      }
+      $( "#addDialog" ).dialog( "open" );
+    });
+    $( ".edit" ).click(function() {
+      if ($("#addDialog").dialog( "isOpen" )){
+        $("#addDialog").dialog( "close" )
+      }
+      $( "#editDialog" ).dialog( "open" );
+
+	    var status = $("#status").val($(this).attr("status"));
+	    var componentId = $("#id-component").val($(this).attr("id"));
+	    var name = $("#name-component").val($(this).attr("value"));
+	    var desc = $("#desc-component").val($(this).attr("data"));
+	    
+    });
+    $( "#updateData" ).click(function(){
+    	var componentId = $("#id-component").val();
+	    var name = $("#name-component").val();
+	    var desc = $("#desc-component").val();
+	    var statusID = $("#status_id").val();
+	    $.ajax({
+		    type: "get",
+		    url: "/components/"+componentId+"/update_component",
+		    data:
+		        {
+		    		name: name,
+		    		description:  desc,
+		    		statusId: statusID
+		    	},
+		    dataType: "json",
+		    success: function(result){
+		        if(result == true)
+		    	{
+		    		location.reload();
+		    	}
+		    }
+		});
+    })
+  });
+
+</script>
+
+
+<div id="addDialog" title="Add a Component">
+  <%= form_for :component, :url => {:action => :create} do |f| %>
+    <fieldset>
+      <table>
+      	  <tr style="height:10px">
+	      	<td><label for="name">Status</label></td>
+    	  	<td><%= f.select :status_id ,options_for_select(@statuses.map { |sq| ["#{sq.name}", sq.id] }), :class=>'form-control' %>
+    	  	</td>
+	      <tr>
+	      	<td><label for="name">Name</label></td>
+	      	<td><%= f.text_field :name, :class => 'form-control', :placeholder => 'Component Name' , style: "margin-top: 4px;", :required => true%></td>
+	      </tr>
+
+	    <tr style="height:10px">
+	      	<td><label for="description">Description(Optional)</label></td>
+	      	<td><%= f.text_field :description, :class => 'form-control', :placeholder => 'Component Description', style: "margin-top: 4px;" %></td>
+	    </tr>
+
+	    <tr style="height:10px">
+	      	<td></td>
+	      	<td><input type="submit" value="Add Component" style="margin-top: 4px;" /></td>
+      	</tr>
+      
+      </table>
+    </fieldset>
+  <% end %>
+</div>
+<div id="editDialog" title="Edit Component">
+    <table>
+		<input type="hidden" name="id" id="id-component" >
+		<tr style="height:10px">
+	      	<td width="150px;"><label for="name">Status*</label></td>
+    	  	<td><%=select_tag :status_id ,options_for_select(@statuses.map { |sq| ["#{sq.name}", sq.id] }), :class=>'form-control' %>
+    	  	</td>
+	    </tr>
+		<tr>
+			<td>
+				<label for="name">Name*</label>
+			</td>
+			<td>
+				<input type="text" name="name" id="name-component" style="margin-top: 4px;">
+			</td>
+		</tr>
+		<tr style="height:10px">
+			<td>
+				<label for="description">Description</label>
+			</td>
+			<td>
+				<input type="text" name="description" id="desc-component" style="margin-top: 4px;">
+			</td>
+		</tr>
+		<tr style="height:10px">
+		<tr>
+			<td></td>
+			<td>
+				<%= link_to 'Update',"javascript:;", :class => 'btn btn-mini btn-default', :id => 'updateData', style: "margin-top: 4px;" %>
+    		</td>
+    	</tr>
+    </table>
+</div>
+<div id="components">
+	<h2>Components
+	<a href="javascript:void(0);" class="pull-right" ><input type="button" class="btn btn-info btn-lg" value="Add a Component" id="addComponent" style="margin-bottom: 7px;"></input></a></h2>
+	<table class="table table-striped">
+		<tbody>
+			<% @components.each do |component| %>
+			<tr>
+				<td width="85%"><span style="font-size:20px;font-weight: bold"><%= component.try(:name) %></span>
+					</br/>
+					<u>Component Status:</u> &nbsp;&nbsp;
+					<%= Status.find(component.status_id).name if component.status_id.present? %>
+				
+					&nbsp;&nbsp;
+					<u>Component Key:</u> &nbsp;&nbsp;
+					<%= component.random_key %>
+				</td>
+				
+				<td style="padding-top:20px"><%= link_to 'Edit','javascript:void(0);', :id => component.id, :class=> "edit", :value=> component.name, data: component.description, status: component.status %></td>
+				<td style="padding-top:20px">
+				<%= link_to 'Delete', component_path(component), method: :delete, data: { confirm: 'Are you sure?' } %>
+				 </td>
+			</tr>
+			<% end %>
+		</tbody>
+	</table>
+</div>

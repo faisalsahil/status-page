@@ -1,0 +1,62 @@
+<script type="text/javascript">
+	var d = document.getElementById("incid");
+d.className = d.className + " active";
+</script>
+<% if @components.present? %>
+  <%= link_to "+ Incident",new_incident_path, class: "btn btn-success pull-right"%>
+<% else %>
+  <%= link_to "+ Incident",components_path({notice: "Please create component first"}), class: "btn btn-success pull-right"%>
+<% end %>
+<h2>Incidents</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Current State</th>
+      <th>Description</th>
+      <th>Belongs to</th>
+      <th>Created At</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @incidents.each do |incident| %>
+      <tr>
+        <td>
+          <%= link_to "#{incident.try(:name)}", incident_path(incident) %>
+        </td>
+        <td>
+          <% st = State.find_by_id(incident.try(:status).to_i) %>
+          
+          <% if st.try(:name) == current_user.try(:states).try(:last).try(:name)%>
+            <span class="badge" style="background-color:green;">&nbsp;</span>
+          <% else %>
+            <span class="badge" style="background-color:red;">&nbsp;</span>
+          <% end %>
+
+          <%= st.try(:name) %>
+        </td>
+        <td>
+          <%= incident.try(:message) %>
+        </td>
+        <td>
+
+          <% if Status.find(Component.find_by_id(incident.try(:component_id)).try(:status_id)).try(:name) == current_user.try(:statuses).try(:first).try(:name)%>
+            <span class="badge" style="background-color:green;">&nbsp;</span>
+          <% else %>
+            <span class="badge" style="background-color:red;">&nbsp;</span>
+          <% end %>
+
+          <%= Component.find_by_id(incident.try(:component_id)).try(:name)%>
+        </td>
+        <td>
+          <%= ActiveSupport::TimeZone[current_user.time_zone].parse(incident.created_at.to_s) %>
+        </td>
+        <td>
+          <%= link_to 'Edit',edit_incident_path(incident) %>&nbsp;&nbsp;
+          <%= link_to 'Delete', incident_path(incident), method: :delete, data: { confirm: 'Are you sure?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,13 @@
+
+<% @statuses.each do |status|%>
+<label style="font-weight:normal;font-family: 'Oswald';font-size: 16px; margin-right:20px;margin-left:8px" >
+	<% if @stat.status_id == status.id %>
+		<input onclick="statusChange(this)" id="<%= status.id %>" name="<%= params[:select_id] %>" type="radio" value='<%= "#{status.name}"%>' checked/>
+	<% else %>
+		<input onclick="statusChange(this)" id="<%= status.id %>" name="<%= params[:select_id] %>" type="radio" value='<%= "#{status.name}"%>' />
+	<% end %>
+	&nbsp; <%= "#{status.name}"%>
+</label>
+<%end%>
+				
+		

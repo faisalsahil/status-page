@@ -1,0 +1,118 @@
+<script type="text/javascript">
+	var d = document.getElementById("dash");
+	d.className = d.className + " active";
+
+
+
+	function statusChange(e) {
+		var componentId = e.name;   //////this is the component id
+		var statusid = e.id; ////// this is the status id
+	    var name = e.value;
+
+	    $.ajax({
+		    type: "get",
+		    url: "/home/"+componentId+"/status_change",
+		    data:
+		        {
+		        	statusid: statusid,
+		    		name: name
+		    	},
+		    dataType: "json",
+		    success: function(result){
+		        if(result == true)
+		    	{
+		    		location.reload();
+		    	}
+		    }
+		});
+	}
+
+
+	$(function() {
+    $( "#addDialog" ).dialog({
+      width: 400,
+      height: 210,
+      autoOpen: false,
+      show: {
+        effect: "clip",
+        duration: 600
+      },
+      hide: {
+        effect: "clip",
+        duration: 600
+      }
+    });
+   
+    
+    $( "#addComponent" ).click(function() {
+      $( "#addDialog" ).dialog( "open" );
+    });
+
+  });
+</script>
+	
+
+<div id="addDialog" title="Add a Component">
+  <%= form_for :component, :url => {:action => :create} do |f| %>
+    <fieldset>
+      <table>
+      	  <tr style="height:10px">
+	      	<td><label for="name">Status</label></td>
+    	  	<td><%= f.select :status_id ,options_for_select(@statuses.map { |sq| ["#{sq.name}", sq.id] }), :class=>'form-control' %>
+    	  	</td>
+	      <tr>
+	      	<td><label for="name">Name</label></td>
+	      	<td><%= f.text_field :name, :class => 'form-control', :placeholder => 'Component Name' , style: "margin-top: 4px;", :required => true%></td>
+	      </tr>
+
+	    <tr style="height:10px">
+	      	<td><label for="description">Description(Optional)</label></td>
+	      	<td><%= f.text_field :description, :class => 'form-control', :placeholder => 'Component Description', style: "margin-top: 4px;" %></td>
+	    </tr>
+
+	    <tr style="height:10px">
+	      	<td></td>
+	      	<td><input type="submit" value="Add Component" style="margin-top: 4px;" /></td>
+      	</tr>
+      
+      </table>
+    </fieldset>
+  <% end %>
+</div>
+
+
+<% if @components.present? %>
+<h2>Component Statuses</h2>
+<% else %>
+<h3>No Components Present
+<a href="javascript:void(0);" class="pull-right" ><input type="button" class="btn btn-info btn-lg" value="Start by adding a New Component" id="addComponent" style="margin-bottom: 7px;"></input></a></h3>
+<%end%>
+
+<table>
+	<% @components.each do |component| %>
+		<tr height="20px">
+			<td width="200px">
+				<span style="font-family: 'Oswald';font-size: 18px;">
+					<%=link_to component.try(:name), component_path(component) %>
+				</span>
+			</td>
+			<% @statuses.each do |status|%>
+				<td width="250px">
+					<label style="font-weight:normal;font-family: 'Oswald';font-size: 16px; margin-right:20px;margin-left:8px" >
+						<% if component.status_id == status.id %>
+							<input onclick="statusChange(this)" id="<%= status.id %>" name="<%= component.id%>" type="radio" value='<%= "#{status.name}"%>' checked/>
+						<% else %>
+							<input onclick="statusChange(this)" id="<%= status.id %>" name="<%= component.id%>" type="radio" value='<%= "#{status.name}"%>' />
+						<% end %>
+						&nbsp; <%= "#{status.name}"%>
+					</label>
+				</td>
+			<% end %>
+		</tr>
+		<tr>
+			<td colspan="10"><hr>
+		</tr>
+	<% end %>
+</table>
+
+

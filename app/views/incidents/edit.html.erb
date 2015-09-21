@@ -1,0 +1,68 @@
+<script type="text/javascript">
+	var d = document.getElementById("incid");
+d.className = d.className + " active";
+</script>
+<div class="page-header">
+  <h2>Edit Incident</h2>
+</div>
+<div id="newForm">
+		
+		<div class="well well-lg">
+			<%= form_for :incident, :url => {:action => :update}, method: :put do |f| %>
+			<div class="field">
+				<label style="font-family: 'Oswald';font-size: 20px">Selected Component Status</label></br>
+				<div id="compStatus">
+					<% @statuses.try(:each) do |status|%>
+						<label style="font-weight:normal;font-family: 'Oswald';font-size: 16px; margin-right:20px;margin-left:8px" >
+							<% if @statfirst.status_id == status.id %>
+								<input onclick="statusChange(this)" id="<%= status.id %>" name="<%= @statfirst.id %>" type="radio" value='<%= "#{status.name}"%>' checked/>
+							<% else %>
+								<input onclick="statusChange(this)" id="<%= status.id %>" name="<%= @statfirst.id %>" type="radio" value='<%= "#{status.name}"%>' />
+							<% end %>
+							&nbsp; <%= "#{status.name}"%>
+						</label>
+					<%end%>
+				</div>
+			</div>
+
+			<div class="field">
+				<label style="font-family: 'Oswald';font-size: 20px">Incident Name</label></br>
+				<%= f.text_field :name, :required => true, :class => 'form-control', :placeholder => 'Incident Name', :value => @incident.name %>
+
+				<%= f.hidden_field :compId, :id => 'compId' %>
+				<%= f.hidden_field :statId, :id => 'statId' %>
+				<%= f.hidden_field :statName, :id => 'statName' %>
+
+			</div>
+			<div class="field">
+				<label style="font-family: 'Oswald';font-size: 20px">Incident Status</label></br>
+				
+				<% @states.try(:each) do |state| %>
+		          <label style="font-weight:normal;font-family: 'Oswald';font-size: 16px; margin-right:20px;margin-left:8px" >
+		            <%= f.radio_button :status, state.try(:id) %>&nbsp; <%= state.try(:name) %> 
+		          </label>
+        		<%end%>
+				
+				</br></br>
+			</div>
+			<div class="field">
+				<label style="font-family: 'Oswald';font-size: 20px">Message</label></br>
+				<%= f.text_area :message, :class => 'form-control', :rows => '5', :placeholder => 'Type your message here...', :value => @incident.message %></br>
+			</div>
+			<div class="actions">
+				<button type="submit" class="btn btn-primary btn-lg" >Update Incident</button>
+				<%= link_to 'Cancel',incidents_path %>
+			</div>
+			<% end %>
+			<br/>
+		</div>
+	</div>
+
+<script type="text/javascript">
+
+	function statusChange(e) {
+	    document.getElementById('compId').value = e.name;   //////this is the component id
+		document.getElementById('statId').value = e.id; ////// this is the status id
+	    document.getElementById('statName').value = e.value;
+	}
+</script>

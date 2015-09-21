@@ -1,0 +1,44 @@
+<script type="text/javascript">
+  var d = document.getElementById("mainten");
+d.className = d.className + " active";
+</script>
+
+<div id="newForm">
+    <h2>Update Details of Maintenance</h2>
+
+    <div class="well well-lg">
+      <%= form_for :maintenance, :url => {:action => :update}, method: :put do |f| %>
+      
+      
+
+      <div class="field">
+        <label style="font-family: 'Oswald';font-size: 20px">Maintenance Title</label></br>
+        <%= f.text_field :title, :required => true, :class => 'form-control', :placeholder => 'Maintenance Title' %>
+
+      </div>
+      
+      <div class="field">
+        <label style="font-family: 'Oswald';font-size: 20px">Description</label></br>
+        <%= f.text_area :description, :class => 'form-control', :rows => '5', :placeholder => 'Type maintenance details here...' %></br>
+      </div>
+
+      <div class="field">
+        <label style="font-family: 'Oswald';font-size: 20px">Start Time</label></br>
+        <%= f.datetime_select :start_at, {:prompt => { :day => 'Select day', :month => 'Select month', :year => 'Select year', :hour => 'Select hour', :minute => 'Select minute' }}, {:class => 'date-select'}  %>
+        
+      </div><br/>
+
+      <div class="field">
+        <label style="font-family: 'Oswald';font-size: 20px">End Time</label></br>
+        <%= f.datetime_select :end_at, {:prompt => { :day => 'Select day', :month => 'Select month', :year => 'Select year', :hour => 'Select hour', :minute => 'Select minute' }}, {:class => 'date-select'}  %>
+
+      </div><br/>
+      <div class="actions">
+      
+        <button type="submit" class="btn btn-primary btn-lg" >Update</button>
+        <%= link_to 'Cancel',maintenance_index_path %>
+      </div>
+      <% end %>
+      <br/><br/>
+    </div>
+  </div>

@@ -1,0 +1,43 @@
+<script type="text/javascript">
+  var d = document.getElementById("plans");
+d.className = d.className + " active";
+</script>
+
+<script type="text/javascript" >
+$(document).ready(function () {
+  	$("#validate-and-submit-card-info").click(function(){
+  		
+      $('#validate-and-submit-card-info').attr('disabled', true);
+        Stripe.setPublishableKey("pk_test_GRzGvFQddRtqJ18WXWfIP6NI");
+
+      Stripe.card.createToken({
+          number: $('.card_number').val(),
+          cvc: $('.card-cvc').val(),
+          exp_month: $('#card_month').val(),
+      
+          exp_year: $('#card_year').val()
+   		}, stripeResponseHandler);
+
+   		return false;
+    });
+
+  	function stripeResponseHandler(status, response) {
+    if (response.error) {
+       alert(response.error.message);
+       $('#validate-and-submit-card-info').attr('disabled', false);
+    } else {
+        var form$ = $(".payment-form");
+        var token = response['id'];
+        form$.append($('<input type="hidden" name="payment[token]" />').val(token));
+        form$.submit();
+    	}
+	}
+  
+
+});
+</script>
+
+
+
+<h1>Create Subscription</h1>
+<%= render :partial => 'form' %>
